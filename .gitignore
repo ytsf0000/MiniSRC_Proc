@@ -2,6 +2,7 @@
 *.echo
 *.qpf
 *.qsf
+*.txt
 /simulation/
 /output_files/
 /incremental_db/
