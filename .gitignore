@@ -3,6 +3,7 @@
 *.qpf
 *.qsf
 *.txt
+*.rpt
 /simulation/
 /output_files/
 /incremental_db/
