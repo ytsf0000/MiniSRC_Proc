@@ -2,7 +2,7 @@ module FourBitCLA (
 	input [3:0] x,
 	input [3:0] y,
 	input c_in,
-	output reg [3:0] s, // sum
+	output [3:0] s, // sum
 	output c_out, //c4 is c_out
 	output g, // for higher-bit compound CLA 
 	output p
@@ -13,10 +13,10 @@ module FourBitCLA (
 	wire c3, g3, p3;
 	
 	//Bit-stage cells
-	BSCell cell0 (x[0],y[0],c_in,s[0],g,p);
-	BSCell cell1 (x[1],y[1],c1,s[1],g,p);
-	BSCell cell2 (x[2],y[2],c2,s[2],g,p);
-	BSCell cell3 (x[3],y[3],c3,s[3],g,p);
+	BSCell cell0 (x[0],y[0],c_in,s[0],g0,p0);
+	BSCell cell1 (x[1],y[1],c1,s[1],g1,p1);
+	BSCell cell2 (x[2],y[2],c2,s[2],g2,p2);
+	BSCell cell3 (x[3],y[3],c3,s[3],g3,p3);
 	
 	//carry lookahead logic
 	assign c1 = g0 | p0 & c_in;
