@@ -4,6 +4,7 @@
 *.qsf
 *.txt
 *.rpt
+*.qws
 /simulation/
 /output_files/
 /incremental_db/
