@@ -1,7 +1,6 @@
 module AddSub_64B (
-	input [63:0] x,
-	input [63:0] y,
-	input c_in,
+	input [63:0] a,
+	input [63:0] b,
 	input add,
 	input sub,
 	output [63:0] s, // sum
@@ -14,39 +13,48 @@ module AddSub_64B (
 	wire c2, g2, p2;
 	wire c3, g3, p3;
 	
+	wire [63:0] operand;
+	wire [63:0] sum;
+	wire c_in;
+	
+	// For subtraction control bit, provide 2's complement to y, output logic multiplexer
+	assign operand = sub ? ~b : b;
+	assign c_in = sub ? 1'b1 : 1'b0;
+	assign s = (add | sub) ? sum : 64'b0;
+	
 	//Bit-stage cells
 	SixteenBitCLA CLA0 (
-		.x(x[15:0]),
-		.y(y[15:0]),
+		.x(a[15:0]),
+		.y(operand[15:0]),
 		.c_in(c_in),
-		.s(s[15:0]),
+		.s(sum[15:0]),
 		.c_out(), //c_out is intentionally left empty, may remove logic associated with this later
 		.g(g0),
 		.p(p0)
 	);
 	SixteenBitCLA CLA1 (
-		.x(x[31:16]),
-		.y(y[31:16]),
+		.x(a[31:16]),
+		.y(operand[31:16]),
 		.c_in(c1),
-		.s(s[31:16]),
+		.s(sum[31:16]),
 		.c_out(), //c_out is intentionally left empty, may remove logic associated with this later
 		.g(g1),
 		.p(p1)
 	);
 	SixteenBitCLA CLA2 (
-		.x(x[47:32]),
-		.y(y[47:32]),
+		.x(a[47:32]),
+		.y(operand[47:32]),
 		.c_in(c2),
-		.s(s[47:32]),
+		.s(sum[47:32]),
 		.c_out(),
 		.g(g2),
 		.p(p2)
 	);
 	SixteenBitCLA CLA3 (
-		.x(x[63:48]),
-		.y(y[63:48]),
+		.x(a[63:48]),
+		.y(operand[63:48]),
 		.c_in(c3),
-		.s(s[63:48]),
+		.s(sum[63:48]),
 		.c_out(),
 		.g(g3),
 		.p(p3)
