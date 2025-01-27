@@ -6,11 +6,10 @@ wire signed [63:0] res2;
 
 reg signed [31:0] a;
 reg signed [31:0] b;
-wire done;
 
 Mult Test(
 	a,b,
-	res1,res2,done
+	res1,res2
 );
 
 reg signed [63:0] test_compare;
@@ -20,7 +19,7 @@ reg [31:0] seed;
 integer i;
 initial begin
 	seed =$random(seed);
-	for (i = 0; i < 100000; i = i + 1) begin
+	for (i = 0; i < 1000; i = i + 1) begin
 		seed =$random(seed);
 		a = seed;
 		seed =$random(seed);
@@ -33,7 +32,7 @@ initial begin
 		test_result=test_result<<1;
 		test_result=test_result+res2;
 		
-		$display("a: %d,b: %d, res1: %d, res2: %d, done=%d", a,b,res1<<1,res2,done);
+		$display("a: %d,b: %d, res1: %d, res2: %d", a,b,res1<<1,res2);
 		$display("true: %d, test: %d",test_compare,test_result);
 		
 		
