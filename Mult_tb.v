@@ -22,9 +22,9 @@ initial begin
 	seed =$random(seed);
 	for (i = 0; i < 100000; i = i + 1) begin
 		seed =$random(seed);
-		a = seed%100000000;
+		a = seed;
 		seed =$random(seed);
-		b = seed%100000000;
+		b = seed;
 		
 		#50; //arbitrary delay
 		
@@ -41,6 +41,7 @@ initial begin
 			$display ("Correct");
 		else begin
 			$display ("Incorrect");
+			#20
 			$finish;
 		end
 	end

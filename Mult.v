@@ -125,7 +125,6 @@ Reducer3_2 StageFinal_1_hi(finalStage_s[0][63:32],finalStage_c[0][62:31],stage4V
 finalStage_s[1][63:32],finalStage_c[1][63:32],stageFinalDone[3]);
 
 
-reg [9:0] check_idk;
 integer i;
 always @ (*) begin
 	done=1'b0;
@@ -138,7 +137,7 @@ always @ (*) begin
 
 		sel[2]=b[2*i+1];
 		sel[1]=b[2*i];
-		current[i]={32'b0,a};
+		current[i]={{32{a[31]}},a};
 
 		case (sel)
 			3'b001:	mult2=1'b0;
