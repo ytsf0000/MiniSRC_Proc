@@ -36,65 +36,93 @@ Fast2complement Complement15(compl[15],current[15],resultArray[15]);
 // all the adder stages									
 wire [63:0]stage1Vals_s[4:0];
 wire [63:0]stage1Vals_c[4:0];
-wire [4:0]stage1Done;
+wire [9:0]stage1Done;
 
 Reducer3_2 Stage1_0_lo(resultArray[3*0][31:0],resultArray[3*0+1][31:0],resultArray[3*0+2][31:0],
 stage1Vals_s[0][31:0],stage1Vals_c[0][31:0],stage1Done[0]);
 Reducer3_2 Stage1_0_hi(resultArray[3*0][63:32],resultArray[3*0+1][63:32],resultArray[3*0+2][63:32],
-stage1Vals_s[0][63:32],stage1Vals_c[0][63:32],stage1Done[0]);
+stage1Vals_s[0][63:32],stage1Vals_c[0][63:32],stage1Done[1]);
 
 Reducer3_2 Stage1_1_lo(resultArray[3*1][31:0],resultArray[3*1+1][31:0],resultArray[3*1+2][31:0],
-stage1Vals_s[1][31:0],stage1Vals_c[1][31:0],stage1Done[1]);
+stage1Vals_s[1][31:0],stage1Vals_c[1][31:0],stage1Done[2]);
 Reducer3_2 Stage1_1_hi(resultArray[3*1][63:32],resultArray[3*1+1][63:32],resultArray[3*1+2][63:32],
-stage1Vals_s[1][63:32],stage1Vals_c[1][63:32],stage1Done[1]);
+stage1Vals_s[1][63:32],stage1Vals_c[1][63:32],stage1Done[3]);
 
 Reducer3_2 Stage1_2_lo(resultArray[3*2][31:0],resultArray[3*2+1][31:0],resultArray[3*2+2][31:0],
-stage1Vals_s[2][31:0],stage1Vals_c[2][31:0],stage1Done[2]);
+stage1Vals_s[2][31:0],stage1Vals_c[2][31:0],stage1Done[4]);
 Reducer3_2 Stage1_2_hi(resultArray[3*2][63:32],resultArray[3*2+1][63:32],resultArray[3*2+2][63:32],
-stage1Vals_s[2][63:32],stage1Vals_c[2][63:32],stage1Done[2]);
+stage1Vals_s[2][63:32],stage1Vals_c[2][63:32],stage1Done[5]);
 
 Reducer3_2 Stage1_3_lo(resultArray[3*3][31:0],resultArray[3*3+1][31:0],resultArray[3*3+2][31:0],
-stage1Vals_s[3][31:0],stage1Vals_c[3][31:0],stage1Done[3]);
+stage1Vals_s[3][31:0],stage1Vals_c[3][31:0],stage1Done[6]);
 Reducer3_2 Stage1_3_hi(resultArray[3*3][63:32],resultArray[3*3+1][63:32],resultArray[3*3+2][63:32],
-stage1Vals_s[3][63:32],stage1Vals_c[3][63:32],stage1Done[3]);
+stage1Vals_s[3][63:32],stage1Vals_c[3][63:32],stage1Done[7]);
 
 Reducer3_2 Stage1_4_lo(resultArray[3*4][31:0],resultArray[3*4+1][31:0],resultArray[3*4+2][31:0],
-stage1Vals_s[4][31:0],stage1Vals_c[4][31:0],stage1Done[4]);
+stage1Vals_s[4][31:0],stage1Vals_c[4][31:0],stage1Done[8]);
 Reducer3_2 Stage1_4_hi(resultArray[3*4][63:32],resultArray[3*4+1][63:32],resultArray[3*4+2][63:32],
-stage1Vals_s[4][63:32],stage1Vals_c[4][63:32],stage1Done[4]);
+stage1Vals_s[4][63:32],stage1Vals_c[4][63:32],stage1Done[9]);
 
 wire [63:0]stage2Vals_s[2:0];
 wire [63:0]stage2Vals_c[2:0];
-wire [2:0]stage2Done;
+wire [5:0]stage2Done;
 
 Reducer3_2 Stage2_0_lo(stage1Vals_s[3*0][31:0],stage1Vals_s[3*0+1][31:0],stage1Vals_s[3*0+2][31:0],
 stage2Vals_s[0][31:0],stage2Vals_c[0][31:0],stage2Done[0]);
 Reducer3_2 Stage2_0_hi(stage1Vals_s[3*0][63:32],stage1Vals_s[3*0+1][63:32],stage1Vals_s[3*0+2][63:32],
-stage2Vals_s[0][63:32],stage2Vals_c[0][63:32],stage2Done[0]);
+stage2Vals_s[0][63:32],stage2Vals_c[0][63:32],stage2Done[1]);
 
 Reducer3_2 Stage2_1_lo({stage1Vals_c[3*0][30:0],1'b0},{stage1Vals_c[3*0+1][30:0],1'b0},{stage1Vals_c[3*0+2][30:0],1'b0},
-stage2Vals_s[1][31:0],stage2Vals_c[1][31:0],stage2Done[1]);
+stage2Vals_s[1][31:0],stage2Vals_c[1][31:0],stage2Done[2]);
 Reducer3_2 Stage2_1_hi(stage1Vals_c[3*0][62:31],stage1Vals_c[3*0+1][62:31],stage1Vals_c[3*0+2][62:31],
-stage2Vals_s[1][63:32],stage2Vals_c[1][63:32],stage2Done[1]);
+stage2Vals_s[1][63:32],stage2Vals_c[1][63:32],stage2Done[3]);
 
-Reducer3_2 Stage2_2_lo(stage1Vals_s[3*1][31:0],{stage1Vals_c[3*1][30:0],1'b0},resultArray[15][31:0],
-stage2Vals_s[2][31:0],stage2Vals_c[2][31:0],stage2Done[2]);
-Reducer3_2 Stage2_2_hi(stage1Vals_s[3*1][63:32],stage1Vals_c[3*1+1][62:31],resultArray [15][62:31],
-stage2Vals_s[2][63:32],stage2Vals_c[2][63:32],stage2Done[2]);
+Reducer3_2 Stage2_2_lo(stage1Vals_s[3][31:0],{stage1Vals_c[3][30:0],1'b0},resultArray[15][31:0],
+stage2Vals_s[2][31:0],stage2Vals_c[2][31:0],stage2Done[4]);
+Reducer3_2 Stage2_2_hi(stage1Vals_s[3][63:32],stage1Vals_c[3][62:31],resultArray[15][63:32],
+stage2Vals_s[2][63:32],stage2Vals_c[2][63:32],stage2Done[5]);
+
+wire [63:0]stage3Vals_s[1:0];
+wire [63:0]stage3Vals_c[1:0];
+wire [3:0]stage3Done;
+
+Reducer3_2 Stage3_0_lo(stage2Vals_s[0][31:0],{stage2Vals_c[0][30:0],1'b0},stage1Vals_s[4][31:0],
+stage3Vals_s[0][31:0],stage3Vals_c[0][31:0],stage3Done[0]);
+Reducer3_2 Stage3_0_hi(stage2Vals_s[0][63:32],stage2Vals_c[0][62:31],stage1Vals_s[4][63:32],
+stage3Vals_s[0][63:32],stage3Vals_c[0][63:32],stage3Done[1]);
+
+Reducer3_2 Stage3_1_lo(stage2Vals_s[1][31:0],{stage2Vals_c[1][30:0],1'b0},{stage1Vals_c[4][30:0],1'b0},
+stage3Vals_s[1][31:0],stage3Vals_c[1][31:0],stage3Done[2]);
+Reducer3_2 Stage3_1_hi(stage2Vals_s[1][63:32],stage2Vals_c[1][62:31],stage1Vals_c[4][62:31],
+stage3Vals_s[1][63:32],stage3Vals_c[1][63:32],stage3Done[3]);
+
+wire [63:0]stage4Vals_s[1:0];
+wire [63:0]stage4Vals_c[1:0];
+wire [3:0]stage4Done;
+
+Reducer3_2 Stage4_0_lo(stage3Vals_s[0][31:0],{stage3Vals_c[0][30:0],1'b0},stage2Vals_s[2][31:0],
+stage4Vals_s[0][31:0],stage4Vals_c[0][31:0],stage4Done[0]);
+Reducer3_2 Stage4_0_hi(stage3Vals_s[0][63:32],stage3Vals_c[0][62:31],stage2Vals_s[2][63:32],
+stage4Vals_s[0][63:32],stage4Vals_c[0][63:32],stage4Done[2]);
+
+Reducer3_2 Stage4_1_lo(stage3Vals_s[1][31:0],{stage3Vals_c[1][30:0],1'b0},{stage2Vals_c[2][30:0],1'b0},
+stage4Vals_s[1][31:0],stage4Vals_c[1][31:0],stage4Done[1]);
+Reducer3_2 Stage4_1_hi(stage3Vals_s[1][63:32],stage3Vals_c[1][62:31],stage2Vals_c[2][62:31],
+stage4Vals_s[1][63:32],stage4Vals_c[1][63:32],stage4Done[3]);
 
 wire [63:0]finalStage_s[1:0];
 wire [63:0]finalStage_c[1:0];
-wire [1:0]stageFinalDone;
+wire [3:0]stageFinalDone;
 
-Reducer3_2 StageFinal_0_lo(stage2Vals_s[0][31:0],stage2Vals_s[1][31:0],{stage2Vals_c[0][30:0],1'b0},
+Reducer3_2 StageFinal_0_lo(stage4Vals_s[0][31:0],stage4Vals_s[1][31:0],{stage4Vals_c[0][30:0],1'b0},
 finalStage_s[0][31:0],finalStage_c[0][31:0],stageFinalDone[0]);
-Reducer3_2 StageFinal_0_hi(stage2Vals_s[0][63:32],stage2Vals_s[1][63:32],stage2Vals_c[0][62:31],
-finalStage_s[0][63:32],finalStage_c[0][63:32],stageFinalDone[0]);
+Reducer3_2 StageFinal_0_hi(stage4Vals_s[0][63:32],stage4Vals_s[1][63:32],stage4Vals_c[0][62:31],
+finalStage_s[0][63:32],finalStage_c[0][63:32],stageFinalDone[1]);
 
-Reducer3_2 StageFinal_1_lo(finalStage_s[0][31:0],{finalStage_c[0][30:0],1'b0},{stage2Vals_c[1][30:0],1'b0},
-finalStage_s[1][31:0],finalStage_c[1][31:0],stageFinalDone[1]);
-Reducer3_2 StageFinal_1_hi(finalStage_s[0][63:32],finalStage_c[0][62:31],stage2Vals_c[1][62:31],
-finalStage_s[1][63:32],finalStage_c[1][63:32],stageFinalDone[1]);
+Reducer3_2 StageFinal_1_lo(finalStage_s[0][31:0],{finalStage_c[0][30:0],1'b0},{stage4Vals_c[1][30:0],1'b0},
+finalStage_s[1][31:0],finalStage_c[1][31:0],stageFinalDone[2]);
+Reducer3_2 StageFinal_1_hi(finalStage_s[0][63:32],finalStage_c[0][62:31],stage4Vals_c[1][62:31],
+finalStage_s[1][63:32],finalStage_c[1][63:32],stageFinalDone[3]);
 
 
 reg [9:0] check_idk;
@@ -135,7 +163,7 @@ always @ (*) begin
 		
 	end
 
-	done=stage1Done==5'b11111&&stage2Done==3'b111&&stageFinalDone==2'b11;
+	done=stage1Done==10'h3FF&&stage2Done==6'h3F&&stage3Done==4'hF&&stage4Done==4'hF&&stageFinalDone==2'b11;
 	res1=finalStage_c[1];
 	res2=finalStage_s[1];
 
