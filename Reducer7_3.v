@@ -1,3 +1,4 @@
+// too many pins :(
 module Reducer7_3 (
 	input [31:0] a1,
 	input [31:0] a2,
