@@ -8,13 +8,18 @@ module ALU_Logical (
 	output reg [31:0] c
 );
 
-	//NOTE: For single register argument operations neg, not, input a is read only.
-
 	wire [31:0] out_and;
 	wire [31:0] out_or;
 	wire [31:0] out_neg;
 	wire [31:0] out_not;
 
+	//NOTE: For single register argument operations neg, not, input a is read only.
+	Complement_32B ALU_NEG (
+		.enable(in_neg),
+		.in(a),
+		.out(out_neg)
+	);
+	
 	always @ (*) begin
 		if (in_and) c = out_and;
 		else if (in_or) c = out_or;
@@ -25,7 +30,6 @@ module ALU_Logical (
 
 	assign out_and = a & b;
 	assign out_or = a | b;
-	assign out_neg = a |
 	assign out_not = ~a;
 
 endmodule
