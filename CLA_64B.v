@@ -3,8 +3,7 @@ module CLA_64B (
 	input [63:0] b,
 	input c_in,
 	output [63:0] s, // sum
-	output c_out, //c4 is c_out
-	output c_out32b
+	output c_out //c4 is c_out
 );
 	wire g0, p0; //c0 is c_in
 	wire c1, g1, p1;
@@ -44,7 +43,7 @@ module CLA_64B (
 		.y(b[63:48]),
 		.c_in(c3),
 		.s(s[63:48]),
-		.c_out(),
+		.c_out(c_out),
 		.g(g3),
 		.p(p3)
 	);
@@ -53,7 +52,6 @@ module CLA_64B (
 	assign c1 = g0 | p0 & c_in;
 	assign c2 = g1 | (p1 & g0) | (p1 & p0 & c_in);
 	assign c3 = g2 | (p2 & g1) | (p2 & p1 & g0) | (p2 & p1 & p0 & c_in);
-	assign c_out = (g3 | (p3 & g2) | (p3 & p2 & g1) | (p3 & p2 & p1 & g0)) | (p3 & p2 & p1 & p0) & c_in;
-	assign c_out32b = s[32];
+	//assign c_out = (g3 | (p3 & g2) | (p3 & p2 & g1) | (p3 & p2 & p1 & g0)) | (p3 & p2 & p1 & p0) & c_in;
 
 endmodule
