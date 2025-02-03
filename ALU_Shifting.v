@@ -63,23 +63,23 @@ module ALU_Shifting (
 			ROR_out = a;
 			// shift 1 pos
 			if (b[0]) begin
-				ROR_out = {a[0], a[31:1]};
+				ROR_out = {ROR_out[0], ROR_out[31:1]};
 			end
 			// shift 2 pos
 			if (b[1]) begin
-				ROR_out = {a[1:0], a[31:2]};
+				ROR_out = {ROR_out[1:0], ROR_out[31:2]};
 			end
 			//shift 4 pos
 			if (b[2]) begin
-				ROR_out = {a[3:0], a[31:4]};
+				ROR_out = {ROR_out[3:0], ROR_out[31:4]};
 			end
 			//shift 8 pos
 			if (b[3]) begin
-				ROR_out = {a[7:0], a[31:8]};
+				ROR_out = {ROR_out[7:0], ROR_out[31:8]};
 			end
 			//shift 16 pos
 			if (b[4]) begin
-				ROR_out = {a[15:0], a[31:16]};
+				ROR_out = {ROR_out[15:0], ROR_out[31:16]};
 			end
 			//anything after this rotates a multiple of 32 so there is essentially no difference
 		end
@@ -91,23 +91,23 @@ module ALU_Shifting (
 			SHL_out = a;
 			// shift 1 pos
 			if (b[0]) begin
-				SHL_out = {a[30:0],1'b0};
+				SHL_out = {SHL_out[30:0],1'b0};
 			end
 			// shift 2 pos
 			if (b[1]) begin
-				SHL_out = {a[29:0],2'b0};
+				SHL_out = {SHL_out[29:0],2'b0};
 			end
 			//shift 4 pos
 			if (b[2]) begin
-				SHL_out = {a[27:0],4'b0};
+				SHL_out = {SHL_out[27:0],4'b0};
 			end
 			//shift 8 pos
 			if (b[3]) begin
-				SHL_out = {a[23:0],8'b0};
+				SHL_out = {SHL_out[23:0],8'b0};
 			end
 			//shift 16 pos
 			if (b[4]) begin
-				SHL_out = {a[15:0],16'b0};
+				SHL_out = {SHL_out[15:0],16'b0};
 			end
 			//shift 32 pos, if any of the bits from bit 5 to 31 are 1
 			if (b[31:5]) begin
@@ -122,23 +122,23 @@ module ALU_Shifting (
 			ROL_out = a;
 			// shift 1 pos
 			if (b[0]) begin
-				ROL_out = {a[30:0],a[31]};
+				ROL_out = {ROL_out[30:0],ROL_out[31]};
 			end
 			// shift 2 pos
 			if (b[1]) begin
-				ROL_out = {a[29:0],a[31:30]};
+				ROL_out = {ROL_out[29:0],ROL_out[31:30]};
 			end
 			//shift 4 pos
 			if (b[2]) begin
-				ROL_out = {a[27:0],a[31:28]};
+				ROL_out = {ROL_out[27:0],ROL_out[31:28]};
 			end
 			//shift 8 pos
 			if (b[3]) begin
-				ROL_out = {a[23:0],a[31:24]};
+				ROL_out = {ROL_out[23:0],ROL_out[31:24]};
 			end
 			//shift 16 pos
 			if (b[4]) begin
-				ROL_out = {a[15:0],a[31:16]};
+				ROL_out = {ROL_out[15:0],ROL_out[31:16]};
 			end
 			//anything after this rotates a multiple of 32 so there is essentially no difference
 		end
