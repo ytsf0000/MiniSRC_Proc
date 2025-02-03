@@ -1,18 +1,16 @@
 module Mult (
 		input [31:0] a,
 		input [31:0] b,
-//		output reg [63:0] result,
-		output reg [63:0] res1,
-		output reg [63:0] res2
+		output [63:0] result
 );
 // last 3 bits [i+1,i,i-1]
 reg [2:0]sel;
+// array of numbers after bit pair
 reg [63:0]current[15:0];
+// if we need to do 2's complement on current number
 reg compl[15:0];
+// resulting numbers
 wire [63:0]resultArray[15:0];
-
-// mult by 2
-reg mult2;
 Fast2complement Complement0(compl[0],current[0],resultArray[0]);
 Fast2complement Complement1(compl[1],current[1],resultArray[1]);
 Fast2complement Complement2(compl[2],current[2],resultArray[2]);
@@ -30,9 +28,10 @@ Fast2complement Complement13(compl[13],current[13],resultArray[13]);
 Fast2complement Complement14(compl[14],current[14],resultArray[14]);
 Fast2complement Complement15(compl[15],current[15],resultArray[15]);
 
+// multiply the current number by 2
+reg mult2;
 
-
-// all the adder stages									
+// all the adder stages					
 wire [63:0]stage1Vals_s[4:0];
 wire [63:0]stage1Vals_c[4:0];
 
@@ -118,6 +117,12 @@ finalStage_s[1][31:0],finalStage_c[1][31:0]);
 Reducer3_2 StageFinal_1_hi(finalStage_s[0][63:32],finalStage_c[0][62:31],stage4Vals_c[1][62:31],
 finalStage_s[1][63:32],finalStage_c[1][63:32]);
 
+CLA_64B CLA(
+	.a(finalStage_c[1]),
+	.b({finalStage_s[1][62:0],1'b0}),
+	.s(result),
+	.c_out()
+);
 
 integer i;
 always @ (*) begin
@@ -154,11 +159,6 @@ always @ (*) begin
 		sel[0]=b[2*i+1];
 		
 	end
-
-	res1=finalStage_c[1];
-	res2=finalStage_s[1];
-
-
 end
 
 
