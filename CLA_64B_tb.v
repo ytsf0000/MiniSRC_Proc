@@ -16,7 +16,6 @@ module CLA_64B_tb();
 	CLA_64B test_CLA_64B(
 		.a(stimulus[63:0]),
 		.b(stimulus[127:64]),
-		.c_in(stimulus[128]),
 		.s(s), // sum
 		.c_out(c_out) //c4 is c_out
 	);
@@ -30,8 +29,8 @@ module CLA_64B_tb();
 	
 	// testbench correctness assertion
 	always @ (posedge clk) begin
-		$display("Test case: x = %d, y = %d, c_in = %d, sum = %d, c_out = %d", x, y, stimulus[128], s, c_out);
-		test_sum = {1'b0,x} + {1'b0,y} + {64'b0,stimulus[128]};
+		$display("Test case: x = %d, y = %d, sum = %d, c_out = %d", x, y, s, c_out);
+		test_sum = {1'b0,x} + {1'b0,y};
 		if (!(test_sum[63:0] == s)) begin
 			$display("Sum is incorrect, expected %d when given sum of %d", test_sum, s);
 			$finish;
