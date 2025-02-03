@@ -1,7 +1,6 @@
 module CLA_64B (
 	input [63:0] a,
 	input [63:0] b,
-	input c_in,
 	output [63:0] s, // sum
 	output c_out //c4 is c_out
 );
@@ -14,7 +13,7 @@ module CLA_64B (
 	SixteenBitCLA CLA0 (
 		.x(a[15:0]),
 		.y(b[15:0]),
-		.c_in(c_in),
+		.c_in(),
 		.s(s[15:0]),
 		.c_out(), //c_out is intentionally left empty, may remove logic associated with this later
 		.g(g0),
@@ -49,9 +48,8 @@ module CLA_64B (
 	);
 	
 	//carry lookahead logic
-	assign c1 = g0 | p0 & c_in;
-	assign c2 = g1 | (p1 & g0) | (p1 & p0 & c_in);
-	assign c3 = g2 | (p2 & g1) | (p2 & p1 & g0) | (p2 & p1 & p0 & c_in);
-	//assign c_out = (g3 | (p3 & g2) | (p3 & p2 & g1) | (p3 & p2 & p1 & g0)) | (p3 & p2 & p1 & p0) & c_in;
-
+	assign c1 = g0 ;
+	assign c2 = g1 | (p1 & g0) ;
+	assign c3 = g2 | (p2 & g1) | (p2 & p1 & g0) ;
+	
 endmodule
