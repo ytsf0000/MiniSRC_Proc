@@ -13,7 +13,7 @@ module CLA_64B (
 	SixteenBitCLA CLA0 (
 		.x(a[15:0]),
 		.y(b[15:0]),
-		.c_in(),
+		.c_in(1'b0),
 		.s(s[15:0]),
 		.c_out(), //c_out is intentionally left empty, may remove logic associated with this later
 		.g(g0),
