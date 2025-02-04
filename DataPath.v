@@ -19,7 +19,7 @@ wire read;
 wire MDRin;
 
 //Devices
-Register (clear, clock, RAin, RegisterAImmediate, BusMuxInRA);
+Register RA(clear, clock, RAin, RegisterAImmediate, BusMuxInRA);
 Register RB(clear, clock, RBin, BusMuxOut, BusMuxInRB);
 
 Register r0(clear, clock, enable, BusMuxOut, BusMuxIn);
