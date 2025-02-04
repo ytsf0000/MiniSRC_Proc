@@ -1,0 +1,88 @@
+`timescale 1ns/10ps
+
+module Bus_tb ();
+
+// Declare Bus inputs as reg
+reg [31:0] BusMuxInR0, BusMuxInR1, BusMuxInR2, BusMuxInR3, BusMuxInR4, BusMuxInR5, BusMuxInR6, BusMuxInR7;
+reg [31:0] BusMuxInR8, BusMuxInR9, BusMuxInR10, BusMuxInR11, BusMuxInR12, BusMuxInR13, BusMuxInR14, BusMuxInR15;
+reg [31:0] BusMuxInHi, BusMuxInLo, BusMuxInZhi, BusMuxInZlo, BusMuxInPC, BusMuxInMDR, BusMuxInPort, BusMuxInCin;
+reg R0out, R1out, R2out, R3out, R4out, R5out, R6out, R7out;
+reg R8out, R9out, R10out, R11out, R12out, R13out, R14out, R15out;
+reg HIout, LOout, Zhighout, Zlowout, PCout, MDRout, InPortout, Cout;
+
+// Declare output as wire
+wire [31:0] BusMuxOut;
+
+// Instantiate the module
+Bus bustest(
+		BusMuxInR0, BusMuxInR1, BusMuxInR2, BusMuxInR3, BusMuxInR4, BusMuxInR5, BusMuxInR6, BusMuxInR7,
+		BusMuxInR8, BusMuxInR9, BusMuxInR10, BusMuxInR11, BusMuxInR12, BusMuxInR13, BusMuxInR14, BusMuxInR15,
+		BusMuxInHi, BusMuxInLo, BusMuxInZhi, BusMuxInZlo, BusMuxInPC, BusMuxInMDR, BusMuxInPort, BusMuxInCin,
+		R0out, R1out, R2out, R3out, R4out, R5out, 
+		R6out, R7out, R8out, R9out, R10out, R11out, 
+		R12out, R13out, R14out, R15out, HIout, LOout, 
+		Zhighout, Zlowout, PCout, MDRout, InPortout, Cout,
+		BusMuxOut
+);
+
+
+
+initial begin
+	// Initialize input values
+	BusMuxInR0 = 32'd0; BusMuxInR1 = 32'd1; BusMuxInR2 = 32'd2; BusMuxInR3 = 32'd3;
+	BusMuxInR4 = 32'd4; BusMuxInR5 = 32'd5; BusMuxInR6 = 32'd6; BusMuxInR7 = 32'd7;
+	BusMuxInR8 = 32'd8; BusMuxInR9 = 32'd9; BusMuxInR10 = 32'd10; BusMuxInR11 = 32'd11;
+	BusMuxInR12 = 32'd12; BusMuxInR13 = 32'd13; BusMuxInR14 = 32'd14; BusMuxInR15 = 32'd15;
+	BusMuxInHi = 32'd16; BusMuxInLo = 32'd17; BusMuxInZhi = 32'd18; BusMuxInZlo = 32'd19;
+	BusMuxInPC = 32'd20; BusMuxInMDR = 32'd21; BusMuxInPort = 32'd22; BusMuxInCin = 32'd23;
+	
+	//Testing of Every Select:
+	R0out = 1; R1out = 0; R2out = 0; R3out = 0; R4out = 0;  R5out = 0; R6out = 0; R7out = 0; R8out = 0; R9out = 0; R10out = 0; R11out = 0; R12out = 0; R13out = 0; R14out = 0; R15out = 0;
+	HIout = 0; LOout = 0; Zhighout = 0; Zlowout = 0; PCout = 0; MDRout = 0; InPortout = 0; Cout = 0;
+	if(BusMuxOut == BusMuxInR0)
+		$display("Correctly Assigns R0");
+	else
+		$display("Incorrect for R0, BusMuxOut: %d", BusMuxOut);
+	
+	R0out = 0; R1out = 1; R2out = 0; R3out = 0; R4out = 0;  R5out = 0; R6out = 0; R7out = 0; R8out = 0; R9out = 0; R10out = 0; R11out = 0; R12out = 0; R13out = 0; R14out = 0; R15out = 0;
+	HIout = 0; LOout = 0; Zhighout = 0; Zlowout = 0; PCout = 0; MDRout = 0; InPortout = 0; Cout = 0;
+	if(BusMuxOut == BusMuxInR1)
+		$display("Correctly Assigns R1");
+	else
+		$display("Incorrect for R1, BusMuxOut: %d", BusMuxOut);
+		
+	R0out = 0; R1out = 0; R2out = 1; R3out = 0; R4out = 0;  R5out = 0; R6out = 0; R7out = 0; R8out = 0; R9out = 0; R10out = 0; R11out = 0; R12out = 0; R13out = 0; R14out = 0; R15out = 0;
+	HIout = 0; LOout = 0; Zhighout = 0; Zlowout = 0; PCout = 0; MDRout = 0; InPortout = 0; Cout = 0;
+	if(BusMuxOut == BusMuxInR2)
+		$display("Correctly Assigns R2");
+	else
+		$display("Incorrect for R2, BusMuxOut: %d", BusMuxOut);
+		
+	R0out = 0; R1out = 0; R2out = 0; R3out = 1; R4out = 0;  R5out = 0; R6out = 0; R7out = 0; R8out = 0; R9out = 0; R10out = 0; R11out = 0; R12out = 0; R13out = 0; R14out = 0; R15out = 0;
+	HIout = 0; LOout = 0; Zhighout = 0; Zlowout = 0; PCout = 0; MDRout = 0; InPortout = 0; Cout = 0;
+	if(BusMuxOut == BusMuxInR3)
+		$display("Correctly Assigns R3");
+	else
+		$display("Incorrect for R3, BusMuxOut: %d", BusMuxOut);
+		
+	R0out = 0; R1out = 0; R2out = 0; R3out = 0; R4out = 1;  R5out = 0; R6out = 0; R7out = 0; R8out = 0; R9out = 0; R10out = 0; R11out = 0; R12out = 0; R13out = 0; R14out = 0; R15out = 0;
+	HIout = 0; LOout = 0; Zhighout = 0; Zlowout = 0; PCout = 0; MDRout = 0; InPortout = 0; Cout = 0;
+	if(BusMuxOut == BusMuxInR4)
+		$display("Correctly Assigns R4");
+	else
+		$display("Incorrect for R3, BusMuxOut: %d", BusMuxOut);
+	
+	R0out = 0; R1out = 0; R2out = 0; R3out = 0; R4out = 0;  R5out = 1; R6out = 0; R7out = 0; R8out = 0; R9out = 0; R10out = 0; R11out = 0; R12out = 0; R13out = 0; R14out = 0; R15out = 0;
+	HIout = 0; LOout = 0; Zhighout = 0; Zlowout = 0; PCout = 0; MDRout = 0; InPortout = 0; Cout = 0;
+	if(BusMuxOut == BusMuxInR4)
+		$display("Correctly Assigns R5");
+	else
+		$display("Incorrect for R5, BusMuxOut: %d", BusMuxOut);
+		
+		
+	// Final cleanup
+	$display("Test Completed!");
+	$finish;
+end
+
+endmodule

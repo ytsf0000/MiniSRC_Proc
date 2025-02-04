@@ -1,18 +1,17 @@
-module Bus(
+module Bus (
 	//Mux
-	input wire R0out, R1out, R2out, R3out, R4out, R5out, R6out, R7out,
-	input wire R8out, R9out, R10out, R11out, R12out, R13out, R14out, R15out,
-	input wire HIout, LOout, Zhighout, Zlowout, PCout, MDRout, In_Portout, Cout,
+	input [31:0] BusMuxInR0, BusMuxInR1, BusMuxInR2, BusMuxInR3, BusMuxInR4, BusMuxInR5, BusMuxInR6, BusMuxInR7,
+					BusMuxInR8, BusMuxInR9, BusMuxInR10, BusMuxInR11, BusMuxInR12, BusMuxInR13, BusMuxInR14, BusMuxInR15,
+					BusMuxInHi, BusMuxInLo, BusMuxInZhi, BusMuxInZlo, BusMuxInPC, BusMuxInMDR, BusMuxInPort, BusMuxInCin,
 
-	
-	//Encoder
+	//Enoder
 	input R0out, R1out, R2out, R3out, R4out, R5out, 
-	input R6out, R7out, R8out, R9out, R10out, 
-	input R11out, R12out, R13out, R14out, R15out,
-	input HIout, LOout, Zhighout, Zlowout, PCout, MDRout,
-	input InPortout, Cout,
+			R6out, R7out, R8out, R9out, R10out, R11out, 
+			R12out, R13out, R14out, R15out, HIout, LOout, 
+			Zhighout, Zlowout, PCout, MDRout, InPortout, Cout,
 
-	output wire [31:0] BusMuxOut
+	//Output of Bus Mux:
+	output [31:0] BusMuxOut
 );
 
 reg [31:0]q;
@@ -34,14 +33,16 @@ always @ (*) begin
 	if(R13out) q = BusMuxInR13;
 	if(R14out) q = BusMuxInR14;
 	if(R15out) q = BusMuxInR15;
-	if(HIout) q = BusMuxInHI;
-	if(LOout) q = BusMuxInLO;
-	if(Zhighout) q = BusMuxInZhigh;
-	if(Zlowout) q = BusMuxInZlow;
+	if(HIout) q = BusMuxInHi;
+	if(LOout) q = BusMuxInLo;
+	if(Zhighout) q = BusMuxInZhi;
+	if(Zlowout) q = BusMuxInZlo;
 	if(PCout) q = BusMuxInPC;
 	if(MDRout) q = BusMuxInMDR;
 	if(InPortout) q = BusMuxInPort;
 	if(Cout) q = BusMuxInCin;
 end
+
 assign BusMuxOut = q;
+
 endmodule 

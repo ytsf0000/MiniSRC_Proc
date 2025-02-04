@@ -1,0 +1,51 @@
+`timescale 1ns/10ps
+
+module Register_tb ();
+
+// Declare inputs as reg
+reg clear;
+reg clock;
+reg enable;
+reg [31:0] BusMuxOut;
+
+// Declare output as wire
+wire [31:0] BusMuxIn;
+
+// Instantiate the module
+Register regtest(clear, clock, enable, BusMuxOut, BusMuxIn);
+
+// Generate clock signal (50% duty cycle, period = 20ns)
+always #10 clock = ~clock;
+
+initial begin
+    // Initialize clock
+    clock = 0;
+
+    // Start monitoring signals
+    $monitor("Time: %t | Clear: %b | Enable: %b | BusMuxOut: %h | BusMuxIn: %h", 
+              $time, clear, enable, BusMuxOut, BusMuxIn);
+    
+    // Reset test
+    clear = 1; enable = 0; BusMuxOut = 32'hACADACAD;
+    @(posedge clock); #5;
+    if (BusMuxIn === 32'b0) $display("✅ Cleared Properly");
+    else $display("Clear failed, BusMuxIn = %h", BusMuxIn);
+    
+    // Write test
+    clear = 0; enable = 1; BusMuxOut = 32'hBEEFBEEF;
+    @(posedge clock); #5;
+    if (BusMuxIn === 32'hBEEFBEEF) $display("✅ Write Properly");
+    else $display("Write failed, BusMuxIn = %h", BusMuxIn);
+    
+    // Hold value when enable = 0
+    enable = 0; BusMuxOut = 32'hFEEDFEED;
+    @(posedge clock); #5;
+    if (BusMuxIn === 32'hBEEFBEEF) $display("✅ Correctly holds value");
+    else $display("Unexpected change, BusMuxIn = %h", BusMuxIn);
+    
+    // Final cleanup
+    $display("Test Completed!");
+    $finish;
+end
+
+endmodule

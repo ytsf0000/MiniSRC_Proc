@@ -1,0 +1,45 @@
+module Bus (
+    // 24 Control Signals (1-bit each)
+    input R0out, R1out, R2out, R3out, R4out, R5out, R6out, R7out,
+          R8out, R9out, R10out, R11out, R12out, R13out, R14out, R15out,
+          HIout, LOout, Zhighout, Zlowout, PCout, MDRout, InPortout, Cout,
+
+    // 24 Data Inputs (32-bit each)
+    input [31:0] BusMuxInR0, BusMuxInR1, BusMuxInR2, BusMuxInR3, BusMuxInR4,
+                 BusMuxInR5, BusMuxInR6, BusMuxInR7, BusMuxInR8, BusMuxInR9,
+                 BusMuxInR10, BusMuxInR11, BusMuxInR12, BusMuxInR13, BusMuxInR14,
+                 BusMuxInR15, BusMuxInHi, BusMuxInLo, BusMuxInZhi, BusMuxInZlo,
+                 BusMuxInPC, BusMuxInMDR, BusMuxInPort, BusMuxInCin,
+
+    // Output
+    output [31:0] BusMuxOut
+);
+
+    // Combine 1-bit control signals into a 24-bit vector
+    wire [23:0] control;
+    assign control = {R0out, R1out, R2out, R3out, R4out, R5out, R6out, R7out,
+                      R8out, R9out, R10out, R11out, R12out, R13out, R14out, R15out,
+                      HIout, LOout, Zhighout, Zlowout, PCout, MDRout, InPortout, Cout};
+
+    // Encoder output
+    wire [4:0] sel;
+
+    // Instantiate Encoder
+    Encoder24to5 encoder (
+        .control(control),
+        .sel(sel)
+    );
+
+    // Instantiate MUX
+    Mux24to1 mux (
+        .BusMuxInR0(BusMuxInR0), .BusMuxInR1(BusMuxInR1), .BusMuxInR2(BusMuxInR2), .BusMuxInR3(BusMuxInR3), 
+        .BusMuxInR4(BusMuxInR4), .BusMuxInR5(BusMuxInR5), .BusMuxInR6(BusMuxInR6), .BusMuxInR7(BusMuxInR7), 
+        .BusMuxInR8(BusMuxInR8), .BusMuxInR9(BusMuxInR9), .BusMuxInR10(BusMuxInR10), .BusMuxInR11(BusMuxInR11), 
+        .BusMuxInR12(BusMuxInR12), .BusMuxInR13(BusMuxInR13), .BusMuxInR14(BusMuxInR14), .BusMuxInR15(BusMuxInR15), 
+        .BusMuxInHi(BusMuxInHi), .BusMuxInLo(BusMuxInLo), .BusMuxInZhi(BusMuxInZhi), .BusMuxInZlo(BusMuxInZlo), 
+        .BusMuxInPC(BusMuxInPC), .BusMuxInMDR(BusMuxInMDR), .BusMuxInPort(BusMuxInPort), .BusMuxInCin(BusMuxInCin), 
+        .sel(sel), 
+        .BusMuxOut(BusMuxOut)
+    );
+
+endmodule

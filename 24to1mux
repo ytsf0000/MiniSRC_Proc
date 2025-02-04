@@ -1,0 +1,39 @@
+module Mux24to1 (
+    input [31:0] BusMuxInR0, BusMuxInR1, BusMuxInR2, BusMuxInR3, BusMuxInR4, BusMuxInR5, BusMuxInR6, BusMuxInR7,
+                 BusMuxInR8, BusMuxInR9, BusMuxInR10, BusMuxInR11, BusMuxInR12, BusMuxInR13, BusMuxInR14, BusMuxInR15,
+                 BusMuxInHi, BusMuxInLo, BusMuxInZhi, BusMuxInZlo, BusMuxInPC, BusMuxInMDR, BusMuxInPort, BusMuxInCin,
+
+    input  wire [4:0] sel,  // 5-bit select signal (supports 0-23)
+    output reg  [31:0] BusMuxOut  // 32-bit output
+);
+
+	always @(*) begin
+		case (sel)
+			5'd0:  BusMuxOut = BusMuxInR0;
+			5'd1:  BusMuxOut = BusMuxInR1;
+			5'd2:  BusMuxOut = BusMuxInR2;
+			5'd3:  BusMuxOut = BusMuxInR3;
+			5'd4:  BusMuxOut = BusMuxInR4;
+			5'd5:  BusMuxOut = BusMuxInR5;
+			5'd6:  BusMuxOut = BusMuxInR6;
+			5'd7:  BusMuxOut = BusMuxInR7;
+			5'd8:  BusMuxOut = BusMuxInR8;
+			5'd9:  BusMuxOut = BusMuxInR9;
+			5'd10: BusMuxOut = BusMuxInR10;
+			5'd11: BusMuxOut = BusMuxInR11;
+			5'd12: BusMuxOut = BusMuxInR12;
+			5'd13: BusMuxOut = BusMuxInR13;
+			5'd14: BusMuxOut = BusMuxInR14;
+			5'd15: BusMuxOut = BusMuxInR15;
+			5'd16: BusMuxOut = BusMuxInHi;
+			5'd17: BusMuxOut = BusMuxInLo;
+			5'd18: BusMuxOut = BusMuxInZhi;
+			5'd19: BusMuxOut = BusMuxInZlo;
+			5'd20: BusMuxOut = BusMuxInPC;
+			5'd21: BusMuxOut = BusMuxInMDR;
+			5'd22: BusMuxOut = BusMuxInPort;
+			5'd23: BusMuxOut = BusMuxInCin;
+			default: BusMuxOut = 32'b0; // Default to zero for invalid select values
+		endcase
+	end
+endmodule

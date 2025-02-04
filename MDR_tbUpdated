@@ -1,0 +1,67 @@
+`timescale 1ns/10ps
+
+module MDR_tb();
+
+//Declare inputs to MDR
+reg clear;
+reg clock;
+reg enable;
+reg read;
+reg [31:0] BusMuxOut;
+reg [31:0] Mdatain;
+
+//Declare output as wire:
+wire [31:0] BusMuxIn;
+
+//Instatiate Module:
+MDR mdr(clear, clock, enable, read, BusMuxOut, Mdatain, BusMuxIn);
+
+//Generate Clock Signal:
+always #10 clock = ~clock;
+
+//Testing
+initial begin
+	//Init Clock:
+	clock = 0;
+	read = 1;
+	
+	// Start monitoring signals
+    $monitor("Time: %t | Clear: %b | Read: %b | Enable: %b | BusMuxOut: %h | Mdatain: %h | BusMuxIn: %h", 
+              $time, clear, read, enable, BusMuxOut, Mdatain, BusMuxIn);
+   
+	//Initialize Values for BusMuxOut and Mdatain:
+	BusMuxOut = 32'hACADACAD; Mdatain = 32'hBEEFBEEF;
+	
+	//Reset Test:
+	clear = 1; enable = 0;
+	@(posedge clock); #5
+	if(BusMuxIn == 32'b0)
+		$display("Cleared Properly");
+	else
+		$display("Clear failed, BusMuxIn = %h", BusMuxIn);
+    
+		
+	//BusMuxOut Test:
+	clear = 0; enable = 1; read = 0;
+	@(posedge clock); #5
+	if(BusMuxIn == BusMuxOut)
+		$display("Correct Value for Read = 0");
+	else
+		$display("Value not BusMuxOut, BusMuxIn = %h", BusMuxIn);
+	
+	//Mdatain Test:
+	clear = 0; enable = 1; read = 1;
+   @(posedge clock); #5
+	if(BusMuxIn == Mdatain)
+		$display("Correct Value for Read = 1");
+	else
+		$display("Value not Mdatain, BusMuxIn = %h", BusMuxIn);
+	
+	//Finish:
+	$display("Test Complete");
+	$finish;
+end
+
+endmodule
+	
+		
