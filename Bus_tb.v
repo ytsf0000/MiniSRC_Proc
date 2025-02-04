@@ -67,14 +67,21 @@ module Bus_tb();
 
 		 // Test Cases
 		 #5 R0out = 1;  // Select input R0 (Expect BusMuxOut = BusMuxInR0)
+		 #5 $display("%h", BusMuxOut);
 		 #5 R0out = 0; R1out = 1;  // Select input R1 (Expect BusMuxOut = BusMuxInR1)
+		 #5 $display("%h", BusMuxOut);
 		 #5 R1out = 0; R5out = 1;  // Select input R5 (Expect BusMuxOut = BusMuxInR5)
+		 #5 $display("%h", BusMuxOut);
 		 #5 R5out = 0; Zlowout = 1; // Select input Zlow (Expect BusMuxOut = BusMuxInZlow)
+		 #5 $display("%h", BusMuxOut);
 		 #5 Zlowout = 0; PCout = 1; // Select input PC (Expect BusMuxOut = BusMuxInPC)
+		 #5 $display("%h", BusMuxOut);
 		 #5 PCout = 0; MDRout = 1; // Select input MDR (Expect BusMuxOut = BusMuxInMDR)
+		 #5 $display("%h", BusMuxOut);
 		 #5 MDRout = 0; Cout = 1; // Select input Cin (Expect BusMuxOut = BusMuxInCin)
+		 #5 $display("%h", BusMuxOut);
 		 #5 Cout = 0; // Reset all
-		 
+		 #5 $display("%h", BusMuxOut);
 		 #5;
 		 $stop; // End simulation
 end
