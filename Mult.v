@@ -118,8 +118,8 @@ Reducer3_2 StageFinal_1_hi(finalStage_s[0][63:32],finalStage_c[0][62:31],stage4V
 finalStage_s[1][63:32],finalStage_c[1][63:32]);
 
 CLA_64B CLA(
-	.a(finalStage_c[1]),
-	.b({finalStage_s[1][62:0],1'b0}),
+	.a(finalStage_s[1]),
+	.b({finalStage_c[1][62:0],1'b0}),
 	.s(result),
 	.c_out()
 );

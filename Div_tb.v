@@ -1,36 +1,39 @@
 `timescale 1ns/10ps
-module Mult_tb();
+module Div_tb();
 
-wire signed [63:0] res;
+wire signed [31:0] res;
+wire signed [31:0] rem;
 
 reg signed [31:0] a;
 reg signed [31:0] b;
 
-Mult Test(
+Div Test(
 	a,b,
-	res
+	res,rem
 );
 
-reg signed [63:0] test_compare;
-reg signed [63:0] test_result;
+reg signed [31:0] test_compare;
+reg signed [31:0] test_result;
 reg [31:0] seed;
 
 integer i;
 initial begin
 	seed =$random(seed);
-	for (i = 0; i < 1000; i = i + 1) begin
+	for (i = 0; i < 10000; i = i + 1) begin
 		seed =$random(seed);
 		a = seed;
+		a=10000-i;
 		seed =$random(seed);
 		b = seed;
+		b=seed%10000;
 		
 		#50; //arbitrary delay
 		
-		test_compare = a*b;
+		test_compare = a/b;
 		test_result=res;
 		
-		$display("a: %d,b: %d, res: %d", a,b,res);
-		$display("true: %d, test: %d",test_compare,test_result);
+		$display("a: %d,b: %d, res: %d, remainder: %d", a,b,res,rem);
+		$display("true: %d, true remainder: %d, test: %d",test_compare,a%b,test_result);
 		
 		
 		if (test_compare == test_result) 

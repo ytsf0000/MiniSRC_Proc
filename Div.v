@@ -1,32 +1,38 @@
 module Div (
 	input [31:0] a,
 	input [31:0] b,
-	output [63:0] result
+	output [31:0] result,
+	output [31:0] remainderOut
 );
 
 
-wire divisor;
-Fast2complement(b[31],{32'b0,b},divisor);
+wire [31:0]tmpResult;
+wire [31:0]divisor;
+Fast2complement DivisorNeg(b[31],{{32{b[31]}},b},divisor);
 
-wire [63:0]divisorArray[32:0];
-wire [63:0]resultArray[32:0];
+wire [31:0]divisorArray[31:0];
+wire [31:0]remainder[32:0];
 
-assign resultArray[0]=64'b0;
+assign remainder[0]=32'b0;
+
 genvar i;
 generate for (i = 0; i < 32; i = i + 1) begin: DivisionStep
-  Fast2complement stepDivisor(~resultArray[i][31],divisor,divisorArray[i]);
-  CLA_64B step(
-    .a({{32{1'b0}},{resultArray[i][30:0],a[31-i]}}),
-    .b(stepDivisor),
-    .s(resultArray[i+1]),
-    .c_out()
-  );
-  assign result[31-i]=~resultArray[i+1][31];
+	Fast2complement stepDiv(~remainder[i][31],divisor,divisorArray[i]);
+	CLA_32B setp(
+		.a({remainder[i][30:0],a[31-i]}),
+		.b(divisorArray[i]),
+		.c_in(1'b0),
+		.s(remainder[i+1]),
+		.c_out()
+	);
+	
+	// assign remainder[i+1]={remainder[i][30:0],a[31-i]}+(divisor*(~remainder[i][31]?-1:1));
+  
+	assign tmpResult[31-i] = ~remainder[i+1][31];
 end endgenerate
 
 
-always @(*) begin
-
-end
+assign remainderOut=remainder[32];
+Fast2complement ResultCompl(b[31],{{32{tmpResult[31]}},tmpResult},result);
 
 endmodule
