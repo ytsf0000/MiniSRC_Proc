@@ -1,42 +1,63 @@
 module DataPath(
-	input clock, clear,
-	input [7:0] A,
-	input [7:0] RegisterAImmediate,
-	input RZout, RAAout, RBout,
-	input RAin, RBin, RZin
+	input PCout, //done
+	input Zlowout, //done
+	input MDRout, 
+	input R3out, //done
+	input R7out, //done
+	input MARin, 
+	input Zin, //done
+	input PCin, //done
+	input MDRin, //done
+	input IRin, //done
+	input Yin, //done
+	input IncPC, 
+	input Read, //Read is for MDR read signal, done
+	input AND, 
+	input R3in, //done
+	input R4in, //done
+	input R7in, //done
+	input Clock, //done
+	input Clear,
+	input [31:0] Mdatain //done
 );
+	wire [31:0] ALU_A;
+	wire [31:0] BusMuxInPC, BusMuxInR3, BusMuxInR4, BusMuxInR7, BusMuxInZlo, BusMuxInZhi, BusMuxInMDR;
+	wire [31:0] BusMuxOut; 
 
-wire [7:0] BusMuxOut, BusMuxInRZ, BusMuxInRA, BusMuxInRB;
+	
+	// Register File
+	Register PC(.Clear(Clear), .Clock(Clock), .Enable(PCin), .BusMuxOut(BusMuxOut), .BusMuxIn(BusMuxInPC));
+	
+	Register IR(.Clear(Clear), .Clock(Clock), .Enable(IRin), .BusMuxOut(BusMuxOut));
+	Register RY(.Clear(Clear), .Clock(Clock), .Enable(Yin), .BusMuxOut(BusMuxOut), .BusMuxIn(ALU_A));
 
-wire [7:0] Zregin;
+	Register R3(.Clear(Clear), .Clock(Clock), .Enable(R3in), .BusMuxOut(BusMuxOut), .BusMuxIn(BusMuxInR3));
+	Register R4(.Clear(Clear), .Clock(Clock), .Enable(R4in), .BusMuxOut(BusMuxOut), .BusMuxIn(BusMuxInR4));
 
-//Devices
-register RA(clear, clock, RAin, RegisterAImmediate, BusMuxInRA);
-register RB(clear, clock, RBin, BusMuxOut, BusMuxInRB);
+	Register R7(.Clear(Clear), .Clock(Clock), .Enable(R7in), .BusMuxOut(BusMuxOut), .BusMuxIn(BusMuxInR7));
 
-register r0(clear, clock, BusMuxOut, BusMuxIn);
-register r1(clear, clock, BusMuxOut, BusMuxIn);
-register r2(clear, clock, BusMuxOut, BusMuxIn);
-register r3(clear, clock, BusMuxOut, BusMuxIn);
-register r4(clear, clock, BusMuxOut, BusMuxIn);
-register r5(clear, clock, BusMuxOut, BusMuxIn);
-register r6(clear, clock, BusMuxOut, BusMuxIn);
-register r7(clear, clock, BusMuxOut, BusMuxIn);
-register r8(clear, clock, BusMuxOut, BusMuxIn);
-register r9(clear, clock, BusMuxOut, BusMuxIn);
-register r10(clear, clock, BusMuxOut, BusMuxIn);
-register r11(clear, clock, BusMuxOut, BusMuxIn);
-register r12(clear, clock, BusMuxOut, BusMuxIn);
-register r13(clear, clock, BusMuxOut, BusMuxIn);
-register r14(clear, clock, BusMuxOut, BusMuxIn);
-register r15(clear, clock, BusMuxOut, BusMuxIn);
-
-
-//adder
-adder add(A, BusMuxOut, Zregin);
-register RZ(cler, clock, RZin, Zregin, BusMuxInRz);
-
-//Bus
-Bus bus(BusMuxInRZ, BusMuxInRA, BusMuxInRB, RZout, RBout, BusMuxOut);
+	Register Zlo(.Clear(Clear), .Clock(Clock), .Enable(Zin), .BusMuxOut(BusMuxOut), .BusMuxIn(BusMuxInZlo));
+	Register Zhi(.Clear(Clear), .Clock(Clock), .Enable(Zin), .BusMuxOut(BusMuxOut), .BusMuxIn(BusMuxInZhi));
+	
+	Register MAR(.Clear(Clear), .Clock(Clock), .Enable(MARin), .BusMuxOut(BusMuxOut)); // connect to memory bus later
+	MDR MDR(.Clear(Clear), .Clock(Clock), .MDRin(MDRin), .BusMuxOut(BusMuxOut), .Mdatain(Mdatain), .Read(Read), .BusMuxIn(BusMuxInMDR));
+	
+	
+	//Bus
+	Bus Bus_DUT(
+		.BusMuxInPC(BusMuxInPC),
+		.BusMuxInZlo(BusMuxInZlo),
+		.BusMuxInZhi(BusMuxInZhi),
+		.BusMuxInR3(BusMuxInR3),
+		.BusMuxInR4(BusMuxInR4),
+		.BusMuxInR7(BusMuxInR7),
+		.PCout(PCout), 
+		.R3out(R3out),
+		.R7out(R7out),
+		.Zlowout(Zlowout),
+		.MDRout(MDRout),
+		.BusMuxOut(BusMuxOut)
+	);
+	
 
 endmodule 
