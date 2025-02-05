@@ -12,7 +12,7 @@ module CLA_32B (
 	wire c3, g3, p3;
 	
 	//Bit-stage cells
-	SixteenBitCLA CLA0 (
+	CLA_16B CLA0 (
 		.x(a[15:0]),
 		.y(b[15:0]),
 		.c_in(c_in),
@@ -21,7 +21,7 @@ module CLA_32B (
 		.g(g0),
 		.p(p0)
 	);
-	SixteenBitCLA CLA1 (
+	CLA_16B CLA1 (
 		.x(a[31:16]),
 		.y(b[31:16]),
 		.c_in(c1),

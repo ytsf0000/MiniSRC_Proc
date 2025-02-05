@@ -15,7 +15,7 @@ wire c_out; //c4 is c_out
 wire g; // for higher-bit compound CLA 
 wire p;
 
-FourBitCLA test_4b_CLA(
+CLA_4B test_4b_CLA(
 	.x(x),
 	.y(y),
 	.c_in(c_in),

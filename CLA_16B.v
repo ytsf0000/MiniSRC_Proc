@@ -1,4 +1,4 @@
-module SixteenBitCLA (
+module CLA_16B (
 	input [15:0] x,
 	input [15:0] y,
 	input c_in,
@@ -14,7 +14,7 @@ module SixteenBitCLA (
 	wire c3, g3, p3;
 	
 	//Bit-stage cells
-	FourBitCLA CLA0 (
+	CLA_4B CLA0 (
 		.x(x[3:0]),
 		.y(y[3:0]),
 		.c_in(c_in),
@@ -23,7 +23,7 @@ module SixteenBitCLA (
 		.g(g0),
 		.p(p0)
 	);
-	FourBitCLA CLA1 (
+	CLA_4B CLA1 (
 		.x(x[7:4]),
 		.y(y[7:4]),
 		.c_in(c1),
@@ -32,7 +32,7 @@ module SixteenBitCLA (
 		.g(g1),
 		.p(p1)
 	);
-	FourBitCLA CLA2 (
+	CLA_4B CLA2 (
 		.x(x[11:8]),
 		.y(y[11:8]),
 		.c_in(c2),
@@ -41,7 +41,7 @@ module SixteenBitCLA (
 		.g(g2),
 		.p(p2)
 	);
-	FourBitCLA CLA3 (
+	CLA_4B CLA3 (
 		.x(x[15:12]),
 		.y(y[15:12]),
 		.c_in(c3),

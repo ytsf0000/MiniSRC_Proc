@@ -1,4 +1,4 @@
-module FourBitCLA (
+module CLA_4B (
 	input [3:0] x,
 	input [3:0] y,
 	input c_in,

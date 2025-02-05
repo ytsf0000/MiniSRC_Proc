@@ -52,7 +52,7 @@ module SixteenBitCLA_tb();
 		$display("Testbench complete.");
 	end
 	
-	SixteenBitCLA test_16b_CLA(
+	CLA_16B test_16b_CLA(
 		.x(stimulus[15:0]),
 		.y(stimulus[31:16]),
 		.c_in(stimulus[32]),
