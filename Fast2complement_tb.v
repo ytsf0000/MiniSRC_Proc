@@ -17,11 +17,11 @@ reg [31:0] seed;
 
 integer i;
 initial begin
-	for (i = 32'b0; i < 32'h1000; i = i + 1) begin
+	for (i = 32'b0; i < 64'hFFFFFFFFFFFFFFFF; i = i + 1) begin
 		seed =$random(seed);
-		test_input = seed;
+		test_input = i;
 		seed =$random(seed);
-		enable = seed % 2;
+		enable = 1;
 
 		$display("enable: %b, in: %t, out: %t", enable, test_input, res);
 		

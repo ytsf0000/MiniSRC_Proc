@@ -5,6 +5,9 @@ module Div (
 	output [31:0] remainderOut
 );
 
+wire [31:0] dividend;
+Fast2complement DividendNeg(a[31],{{32{a[31]}},a},dividend);
+
 
 wire [31:0]tmpResult;
 wire [31:0]divisor;
@@ -19,20 +22,18 @@ genvar i;
 generate for (i = 0; i < 32; i = i + 1) begin: DivisionStep
 	Fast2complement stepDiv(~remainder[i][31],divisor,divisorArray[i]);
 	CLA_32B setp(
-		.a({remainder[i][30:0],a[31-i]}),
+		.a({remainder[i][30:0],dividend[31-i]}),
 		.b(divisorArray[i]),
 		.c_in(1'b0),
 		.s(remainder[i+1]),
 		.c_out()
 	);
-	
-	// assign remainder[i+1]={remainder[i][30:0],a[31-i]}+(divisor*(~remainder[i][31]?-1:1));
-  
+	 
 	assign tmpResult[31-i] = ~remainder[i+1][31];
 end endgenerate
 
 
 assign remainderOut=remainder[32];
-Fast2complement ResultCompl(b[31],{{32{tmpResult[31]}},tmpResult},result);
+Fast2complement ResultCompl(a[31]^b[31],{{32{tmpResult[31]}},tmpResult},result);
 
 endmodule

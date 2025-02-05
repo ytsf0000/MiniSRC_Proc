@@ -21,11 +21,9 @@ initial begin
 	seed =$random(seed);
 	for (i = 0; i < 10000; i = i + 1) begin
 		seed =$random(seed);
-		a = seed;
-		a=10000-i;
+		a = seed%32'hFFFFFFFF;
 		seed =$random(seed);
 		b = seed;
-		b=seed%10000;
 		
 		#50; //arbitrary delay
 		
