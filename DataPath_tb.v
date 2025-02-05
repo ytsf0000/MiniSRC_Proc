@@ -9,11 +9,31 @@ module DataPath_tb();
 	
 	parameter Default = 4'b0000, Reg_load1a = 4'b0001, Reg_load1b = 4'b0010, Reg_load2a = 4'b0011,
 				Reg_load2b = 4'b0100, Reg_load3a = 4'b0101, Reg_load3b = 4'b0110, T0 = 4'b0111,
-				T1 = 4'b1000, T2 = 4'b1001, T3 = 4'b1010, T4 = 4'b1011, T5 = 4'b1100;
+				T1 = 4'b1000, T2 = 4'b1001, T3 = 4'b1010, T4 = 4'b1011, T5 = 4'b1100, Done = 4'b1101;
 	
 	reg [3:0] Present_state = Default;
 	
-	DataPath DUT (PCout, Zlowout, MDRout, R3out, R7out, MARin, Zin, PCin, MDRin, IRin, Yin, IncPC, Read, AND, R3in,R4in, R7in, Clock, Mdatain);
+	DataPath DUT (
+		.PCout(PCout), 
+		.Zlowout(Zlowout), 
+		.MDRout(MDRout), 
+		.R3out(R3out), 
+		.R7out(R7out), 
+		.MARin(MARin), 
+		.Zin(Zin), 
+		.PCin(PCin), 
+		.MDRin(MDRin), 
+		.IRin(IRin), 
+		.Yin(Yin), 
+		.IncPC(IncPC), 
+		.Read(Read), 
+		.AND(AND), 
+		.R3in(R3in),
+		.R4in(R4in), 
+		.R7in(R7in), 
+		.Clock(Clock), 
+		.Mdatain(Mdatain)
+	);
 	
 	// add test logic here
 	initial begin
@@ -24,7 +44,7 @@ module DataPath_tb();
 	always @(posedge Clock) begin
 		case (Present_state)
 			Default : Present_state = Reg_load1a;
-			Reg_load1a : Present_state = Reg_load1b;
+			Reg_load1a : Present_state = Done;
 			Reg_load1b : Present_state = Reg_load2a;
 			Reg_load2a : Present_state = Reg_load2b;
 			Reg_load2b : Present_state = Reg_load3a;
@@ -35,6 +55,7 @@ module DataPath_tb();
 			T2 : Present_state = T3;
 			T3 : Present_state = T4;
 			T4 : Present_state = T5;
+			T5 : Present_state = Done;
 		endcase
 	end
 	
@@ -99,6 +120,10 @@ module DataPath_tb();
 			
 			T5: begin
 				Zlowout <= 1; R4in <= 1;
+			end
+			
+			Done: begin
+				$finish;
 			end
 			
 		endcase

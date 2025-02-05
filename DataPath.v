@@ -17,16 +17,16 @@ module DataPath(
 	input R4in, //done
 	input R7in, //done
 	input Clock, //done
+	input Clear,
 	input [31:0] Mdatain //done
 );
-
-	wire Clear;
 	wire [31:0] ALU_A;
 	wire [31:0] BusMuxInPC, BusMuxInR3, BusMuxInR4, BusMuxInR7, BusMuxInZlo, BusMuxInZhi, BusMuxInMDR;
 	wire [31:0] BusMuxOut; 
 
 	
-	Register PC (.Clear(Clear), .Clock(Clock), .Enable(PCin), .BusMuxOut(BusMuxOut), .BusMuxIn(BusMuxInPC));
+	// Register File
+	Register PC(.Clear(Clear), .Clock(Clock), .Enable(PCin), .BusMuxOut(BusMuxOut), .BusMuxIn(BusMuxInPC));
 	
 	Register IR(.Clear(Clear), .Clock(Clock), .Enable(IRin), .BusMuxOut(BusMuxOut));
 	Register RY(.Clear(Clear), .Clock(Clock), .Enable(Yin), .BusMuxOut(BusMuxOut), .BusMuxIn(ALU_A));
@@ -39,7 +39,9 @@ module DataPath(
 	Register Zlo(.Clear(Clear), .Clock(Clock), .Enable(Zin), .BusMuxOut(BusMuxOut), .BusMuxIn(BusMuxInZlo));
 	Register Zhi(.Clear(Clear), .Clock(Clock), .Enable(Zin), .BusMuxOut(BusMuxOut), .BusMuxIn(BusMuxInZhi));
 	
-	MDR MDR (.Clear(Clear), .Clock(Clock), .MDRin(MDRin), .BusMuxOut(BusMuxOut), .Mdatain(Mdatain), .Read(Read), .BusMuxIn(BusMuxInMDR));
+	Register MAR(.Clear(Clear), .Clock(Clock), .Enable(MARin), .BusMuxOut(BusMuxOut)); // connect to memory bus later
+	MDR MDR(.Clear(Clear), .Clock(Clock), .MDRin(MDRin), .BusMuxOut(BusMuxOut), .Mdatain(Mdatain), .Read(Read), .BusMuxIn(BusMuxInMDR));
+	
 	
 	//Bus
 	Bus Bus_DUT(
