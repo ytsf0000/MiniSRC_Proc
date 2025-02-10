@@ -1,5 +1,5 @@
 `timescale 1ns/10ps
-module DataPath_tb();
+module DataPath_OR_tb();
 
 	reg PCout, Zlowout, MDRout, R3out, R7out; // add any other signals to see in your simulation
 	reg MARin, Zin, PCin, MDRin, IRin, Yin;
