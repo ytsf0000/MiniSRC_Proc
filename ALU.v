@@ -4,12 +4,12 @@ module ALU (
 	input ADD, // done
 	input SUB, // done
 	input MUL, // done
-	input DIV, //done
-	input SHR, 
-	input SHRA,
-	input SHL, 
-	input ROR, 
-	input ROL, 
+	input DIV, // done
+	input SHR, // done
+	input SHRA, // done
+	input SHL, // done
+	input ROR, // done
+	input ROL, // done
 	input AND, 
 	input OR, 
 	input NEG, 
@@ -20,6 +20,7 @@ module ALU (
 	wire [31:0] AddSub_Out;
 	wire [31:0] Div_Rem_Out;
 	wire [31:0] Div_Quo_Out;
+	wire [31:0] Shift_Out;
 	wire [63:0] Mul_Out;
 	
 	wire [31:0] AddSub_In;
@@ -47,11 +48,22 @@ module ALU (
 		.result(Mul_Out)
 	);
 	
+	ALU_Shifting ALU_Shifting_DUT(
+		.a(a),
+		.b(b),
+		.SHR(SHR),
+		.SHRA(SHRA),
+		.SHL(SHL),
+		.ROR(ROR),
+		.ROL(ROL),
+		.c(Shift_Out)
+	);
+	
 	always @ (*) begin
-		if (ADD | SUB) ALU_Out = AddSub_Out;
+		if (ADD | SUB) ALU_Out = {32'b0,AddSub_Out};
 		else if (DIV) ALU_Out = {Div_Rem_Out,Div_Quo_Out};
 		else if (MUL) ALU_Out = Mul_Out;
-		
+		else if (SHR | SHRA | SHL | ROR | ROL) ALU_Out = Shift_Out;
 	end
 
 endmodule
