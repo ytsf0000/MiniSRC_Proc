@@ -6,7 +6,7 @@ module DataPath_tb();
 	reg PCout, Zlowout, MDRout, R0out, R1out, R2out, R3out, R4out, R5out, R6out, R7out, R8out, R9out, R10out, R11out, R12out, R13out, R14out, R15out; // add any other signals to see in your simulation
 	reg MARin, Zin, PCin, MDRin, IRin, Yin;
 	reg IncPC, Read, R1in, R2in, R3in, R4in, R5in, R6in, R7in, R8in, R9in, R10in, R11in, R12in, R13in, R14in, R15in;
-	reg AND, OR, ADD, SUB, SHR, SHRA, SHL, ROR, ROL;
+	reg AND, OR, ADD, SUB, SHR, SHRA, SHL, ROR, ROL, NEG, NOT;
 	reg Clock;
 	reg [31:0] Mdatain;
 	
@@ -25,7 +25,8 @@ module DataPath_tb();
 	DataPath DataPath_DUT (
 		.PCout(PCout), 
 		.Zlowout(Zlowout), 
-		.MDRout(MDRout), 
+		.MDRout(MDRout),
+		.R0out(R0out), 
 		.R3out(R3out), 
 		.R7out(R7out), 
 		.MARin(MARin), 
@@ -45,8 +46,11 @@ module DataPath_tb();
 		.SHL(SHL),
 		.ROR(ROR),
 		.ROL(ROL),
+		.NEG(NEG),
+		.NOT(NOT),
 		.R3in(R3in),
 		.R4in(R4in), 
+		.R5IN(R5in),
 		.R7in(R7in), 
 		.Clock(Clock), 
 		.Mdatain(Mdatain)
@@ -140,9 +144,22 @@ module DataPath_tb();
 				Mdatain = 32'b0;
 			end
 			Reg_load1a: begin
-				Mdatain = 32'h00000022;
-				Read = 1; 
-				MDRin = 1;
+				case (operation_state)
+					NEG_s:
+						begin
+							Read = 0;
+						end
+					NOT_s:
+						begin
+							Read = 0;
+						end
+					default:
+						begin
+							Mdatain = 32'h00000022;
+							Read = 1; 
+							MDRin = 1;
+						end
+				endcase
 			end
 			Reg_load1b: begin
 				Read = 0; 
@@ -150,16 +167,34 @@ module DataPath_tb();
 				// Blocking assignment so timing is not a concern for this state machine implementation
 				MDRout = 1; 
 				// TODO change this to specific register depending on operation state
-				R3in = 1;
+				case (operation_state)
+					NEG_s:begin end
+					NOT_s:begin end
+					default:
+						R3in = 1;
+				endcase
 			end
 			Reg_load2a: begin
 				MDRout = 0;
 				// change this to specific register depending on operation state
 				R3in = 0;
 				
-				Mdatain = 32'h00000024;
-				Read = 1; 
-				MDRin = 1;
+				case (operation_state)
+					NEG_s:
+						begin
+							Read = 0;
+						end
+					NOT_s:
+						begin
+							Read = 0;
+						end
+					default:
+						begin
+							Mdatain = 32'h00000024;
+							Read = 1; 
+							MDRin = 1;
+						end
+				endcase
 			end
 			Reg_load2b: begin
 				Read = 0; 
@@ -167,29 +202,41 @@ module DataPath_tb();
 				
 				MDRout = 1; 
 				// TODO change this to specific register depending on operation state
-				R7in = 1;
+				case (operation_state)
+					NEG_s:begin end
+					NOT_s:begin end
+					default:
+						R7in = 1;
+				endcase
 			end
 			Reg_load3a: begin
 				MDRout = 0;
 				// TODO change this to specific register depending on operation state
 				R7in = 0;
-				
 				Mdatain = 32'h00000028;
 				Read = 1; 
 				MDRin = 1;
-			end
 			Reg_load3b: begin
 				Read = 0; 
 				MDRin = 0;
 				
 				MDRout = 1;
 				// TODO change this to specific register depending on operation state
-				R4in = 1;
+				case (operation_state)
+					NEG_s:
+						R5in = 1;
+					NOT_s:
+						R5in = 1;
+					default:
+						R4in = 1;
+				endcase
+
 			end
 			T0: begin
 				MDRout = 0;
 				// TODO change this to specific register depending on operation state
 				R4in = 0;
+				R5in = 0;
 				
 				PCout = 1; 
 				MARin = 1; 
@@ -217,6 +264,8 @@ module DataPath_tb();
 					SHL_s : Mdatain = 32'h5A1B8000;
 					ROR_s : Mdatain = 32'h3a2b8000;
 					ROL_s : Mdatain = 32'h422b8000;
+					NEG_s : Mdatain = 32'h8a800000;
+					NOT_s : Mdatain = 32'h92800000;
 				endcase
 			end
 			T2: begin
@@ -233,31 +282,42 @@ module DataPath_tb();
 				IRin = 0;
 				
 				// TODO change this to specific register depending on operation state
-				R3out = 1;
+				case (operation_state)
+					NEG_s:
+						R0out = 1;
+					NOT_s:
+						R0out = 1;
+					default:
+						R3out = 1;
+				endcase
 				Yin = 1;
 			end
 			T4: begin
 				// TODO change this to specific register depending on operation state
+				R0out = 0;
 				R3out = 0;
 				Yin = 0;
 				
 				// TODO change this to specific register depending on operation state
-				R7out = 1; 
+
 				case (operation_state)
-					AND_s : AND = 1;
-					OR_s : OR = 1;
-					ADD_s : ADD = 1;
-					SUB_s : SUB = 1;
-					SHR_s : SHR = 1;
-					SHRA_s : SHRA = 1;
-					SHL_s : SHL = 1;
-					ROR_s : ROR = 1;
-					ROL_s : ROL = 1;
+					AND_s : begin AND = 1;R7out = 1; end
+					OR_s :  begin OR  = 1;R7out = 1; end
+					ADD_s : begin ADD = 1;R7out = 1; end
+					SUB_s : begin SUB = 1;R7out = 1; end
+					SHR_s : begin SHR = 1; R5out = 1; end
+					SHRA_s : begin SHRA = 1; R5out = 1; end
+					SHL_s : begin SHL = 1; R5out = 1; end
+					ROR_s : begin ROR = 1; R5out = 1; end
+					ROL_s : begin ROL = 1; R5out = 1; end
+					NEG_s : begin NEG = 1;R5out = 1; end
+					NOT_s : begin NOT = 1;R5out = 1; end
 				endcase
 				Zin = 1;
 			end
 			T5: begin
 				// TODO change this to specific register depending on operation state
+				R5out = 0;
 				R7out = 0; 
 				AND = 0;
 				OR = 0;
