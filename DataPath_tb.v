@@ -3,14 +3,20 @@ module DataPath_tb();
 
 	reg PCout, Zlowout, MDRout, R3out, R7out; // add any other signals to see in your simulation
 	reg MARin, Zin, PCin, MDRin, IRin, Yin;
-	reg IncPC, Read, AND, R3in, R4in, R7in;
+	reg IncPC, Read, R3in, R4in, R7in;
+	reg AND, OR, ADD;
 	reg Clock;
 	reg [31:0] Mdatain;
 	
+	parameter AND_s = 4'h0,OR_s=4'h1,ADD_s=4'h2,SUB_s=4'h3,MUL_s=4'h4,DIV_s=4'h6,SHR_s=4'h7,SHRA_s=4'h8,SHL_s=4'h9,ROR_s=4'hA,ROL_s=4'hB,NEG_s=4'hC,NOT_s=4'hD;
+
 	parameter Default = 4'b0000, Reg_load1a = 4'b0001, Reg_load1b = 4'b0010, Reg_load2a = 4'b0011,
 				Reg_load2b = 4'b0100, Reg_load3a = 4'b0101, Reg_load3b = 4'b0110, T0 = 4'b0111,
 				T1 = 4'b1000, T2 = 4'b1001, T3 = 4'b1010, T4 = 4'b1011, T5 = 4'b1100, Done = 4'b1101;
 				
+	reg [3:0] operation_state,;
+	reg [3:0] next_operation_state;
+	
 	reg [3:0] next_state;
 	reg [3:0] present_state;
 	
@@ -28,7 +34,9 @@ module DataPath_tb();
 		.Yin(Yin), 
 		.IncPC(IncPC), 
 		.Read(Read), 
-		.AND(AND), 
+		.AND(AND),
+		.OR(OR),
+		.ADD(ADD),
 		.SUB(1'b0), // this is to stop the alu from z values
 		.R3in(R3in),
 		.R4in(R4in), 
@@ -45,11 +53,13 @@ module DataPath_tb();
 	
 	initial begin
 		present_state <= Default;
+		operation_state <= AND_s;
 	end
 	
 	always @ (negedge Clock) begin
 		#5;
 		present_state <= next_state;
+		operation_state <= next_operation_state;
 	end
 	
 	always @(*) begin
@@ -68,6 +78,21 @@ module DataPath_tb();
 			T4 : next_state = T5;
 			T5 : next_state = Done;
 		endcase
+		case (operation_state)
+			AND_s : next_operation_state = OR_s;
+			OR_s : next_operation_state = ADD_s;
+			ADD_s : next_operation_state = SUB_s;
+			SUB_s : next_operation_state = MUL_s;
+			MUL_s : next_operation_state = DIV_s;
+			DIV_s : next_operation_state = SHR_s;
+			SHR_s : next_operation_state = SHRA_s;
+			SHRA_s : next_operation_state = SHL_s;
+			SHL_s : next_operation_state = ROR_s;
+			ROR_s : next_operation_state = ROL_s;
+			ROL_s : next_operation_state = NEG_s;
+			NEG_s : next_operation_state = NOT_s;
+			NOT_s : next_operation_state = AND_s;
+		endcase
 	end
 	
 	always @ (*) begin
@@ -76,6 +101,7 @@ module DataPath_tb();
 				PCout = 1'b0;
 				Zlowout = 1'b0;
 				MDRout = 1'b0;
+				// TODO set all reg to 0 for other ops
 				R3out = 1'b0;
 				R7out = 1'b0;
 				MARin = 1'b0;
@@ -86,7 +112,11 @@ module DataPath_tb();
 				Yin = 1'b0;
 				IncPC = 1'b0;
 				Read = 1'b0;
+				// TODO set all alu inputs to 0
 				AND = 1'b0;
+				OR = 1'b0;
+				ADD = 1'b0;
+				// TODO set all register in to 0
 				R3in = 1'b0;
 				R4in = 1'b0;
 				R7in = 1'b0;
@@ -103,10 +133,12 @@ module DataPath_tb();
 				MDRin = 0;
 				// Blocking assignment so timing is not a concern for this state machine implementation
 				MDRout = 1; 
+				// TODO change this to specific register depending on operation state
 				R3in = 1;
 			end
 			Reg_load2a: begin
 				MDRout = 0;
+				// change this to specific register depending on operation state
 				R3in = 0;
 				
 				Mdatain = 32'h00000024;
@@ -118,10 +150,12 @@ module DataPath_tb();
 				MDRin = 0;
 				
 				MDRout = 1; 
+				// TODO change this to specific register depending on operation state
 				R7in = 1;
 			end
 			Reg_load3a: begin
 				MDRout = 0;
+				// TODO change this to specific register depending on operation state
 				R7in = 0;
 				
 				Mdatain = 32'h00000028;
@@ -133,10 +167,12 @@ module DataPath_tb();
 				MDRin = 0;
 				
 				MDRout = 1;
+				// TODO change this to specific register depending on operation state
 				R4in = 1;
 			end
 			T0: begin
 				MDRout = 0;
+				// TODO change this to specific register depending on operation state
 				R4in = 0;
 				
 				PCout = 1; 
@@ -154,6 +190,7 @@ module DataPath_tb();
 				PCin = 1; 
 				Read = 1; 
 				MDRin = 1;
+				// TODO change this to specific register depending on operation state
 				Mdatain = 32'h2A2B8000; 
 			end
 			T2: begin
@@ -169,23 +206,28 @@ module DataPath_tb();
 				MDRout = 0;
 				IRin = 0;
 				
+				// TODO change this to specific register depending on operation state
 				R3out = 1;
 				Yin = 1;
 			end
 			T4: begin
+				// TODO change this to specific register depending on operation state
 				R3out = 0;
 				Yin = 0;
 				
+				// TODO change this to specific register depending on operation state
 				R7out = 1; 
 				AND = 1; 
 				Zin = 1;
 			end
 			T5: begin
+				// TODO change this to specific register depending on operation state
 				R7out = 0; 
 				AND = 0; 
 				Zin = 0;
 				
 				Zlowout = 1; 
+				// TODO change this to specific register depending on operation state
 				R4in = 1;
 			end
 			Done: $stop;
@@ -194,6 +236,7 @@ module DataPath_tb();
 	end
 	
 	//logic to double check values for each state
+	// TODO change this to specific register depending on operation state
 	always @ (negedge Clock) begin
 		case (present_state)
 			Reg_load1a: begin

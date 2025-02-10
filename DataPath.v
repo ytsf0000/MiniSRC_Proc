@@ -13,6 +13,7 @@ module DataPath(
 	input IncPC, 
 	input Read, //Read is for MDR read signal, done
 	input AND, 
+	input ADD,
 	input SUB, 
 	input MUL, 
 	input DIV, 
