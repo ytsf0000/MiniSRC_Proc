@@ -59,7 +59,9 @@ module DataPath_tb();
 	always @ (negedge Clock) begin
 		#5;
 		present_state <= next_state;
-		operation_state <= next_operation_state;
+		if (present_state == Done) begin
+			operation_state <= next_operation_state;
+		end
 	end
 	
 	always @(*) begin
@@ -244,8 +246,11 @@ module DataPath_tb();
 				// TODO change this to specific register depending on operation state
 				R4in = 1;
 			end
-			Done: $stop;
-			
+			Done: begin
+				if (operation_state==NOT_s)begin
+					$stop
+				end
+			end
 		endcase
 	end
 	
