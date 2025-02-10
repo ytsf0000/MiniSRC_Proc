@@ -12,3 +12,6 @@
 /db/
 *.rpt
 *.rpt
+*.smsg
+*.done
+*.summary
