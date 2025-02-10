@@ -14,7 +14,7 @@ module DataPath_tb();
 				Reg_load2b = 4'b0100, Reg_load3a = 4'b0101, Reg_load3b = 4'b0110, T0 = 4'b0111,
 				T1 = 4'b1000, T2 = 4'b1001, T3 = 4'b1010, T4 = 4'b1011, T5 = 4'b1100, Done = 4'b1101;
 				
-	reg [3:0] operation_state,;
+	reg [3:0] operation_state;
 	reg [3:0] next_operation_state;
 	
 	reg [3:0] next_state;

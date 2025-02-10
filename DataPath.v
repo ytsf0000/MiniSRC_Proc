@@ -2,14 +2,22 @@ module DataPath(
 	input PCout, //done
 	input Zlowout, //done
 	input MDRout, 
-	input R3out, //done
-	input R7out, //done
-	input MARin, 
-	input Zin, //done
-	input PCin, //done
-	input MDRin, //done
-	input IRin, //done
-	input Yin, //done
+	input R0out,
+	input R1out,
+	input R2out,
+	input R3out,
+	input R4out,
+	input R5out,
+	input R6out,
+	input R7out,
+	input R8out,
+	input R9out,
+	input R10out,
+	input R11out,
+	input R12out,
+	input R13out,
+	input R14out,
+	input R15out,
 	input IncPC, 
 	input Read, //Read is for MDR read signal, done
 	input AND, 
@@ -25,9 +33,28 @@ module DataPath(
 	input OR, 
 	input NEG, 
 	input NOT,
+	input MARin, 
+	input Zin, //done
+	input PCin, //done
+	input MDRin, //done
+	input IRin, //done
+	input Yin, //done
+	input R0in,
+	input R1in,
+	input R2in,
 	input R3in, //done
 	input R4in, //done
+	input R5in,
+	input R6in,
 	input R7in, //done
+	input R8in,
+	input R9in,
+	input R10in,
+	input R11in,
+	input R12in,
+	input R13in,
+	input R14in,
+	input R15in,
 	input Clock, //done
 	input Clear,
 	input [31:0] Mdatain //done
@@ -35,7 +62,14 @@ module DataPath(
 	wire [31:0] Y_Out;
 	wire [31:0] ALU_A;
 	wire [63:0] ALU_Out;
-	wire [31:0] BusMuxInPC, BusMuxInR3, BusMuxInR4, BusMuxInR7, BusMuxInZlo, BusMuxInZhi, BusMuxInMDR, BusMuxInIR;
+	wire [31:0] BusMuxInPC, BusMuxInR0, BusMuxInR1, 
+					BusMuxInR2, BusMuxInR3, BusMuxInR4, 
+					BusMuxInR5, BusMuxInR6, BusMuxInR7, 
+					BusMuxInR8, BusMuxInR9, BusMuxInR10,
+					BusMuxInR11, BusMuxInR12, BusMuxInR13, 
+					BusMuxInR14, BusMuxInR15, BusMuxInZlo, 
+					BusMuxInZhi, BusMuxInMDR, BusMuxInIR;
+			
 	wire [31:0] BusMuxOut; 
 
 	assign ALU_A = (IncPC) ? 32'b1 : Y_Out;
@@ -45,12 +79,25 @@ module DataPath(
 	
 	Register IR(.Clear(Clear), .Clock(Clock), .Enable(IRin), .BusMuxOut(BusMuxOut), .BusMuxIn(BusMuxInIR));
 	Register RY(.Clear(Clear), .Clock(Clock), .Enable(Yin), .BusMuxOut(BusMuxOut), .BusMuxIn(Y_Out));
-
+	
+	Register R0(.Clear(Clear), .Clock(Clock), .Enable(R0in), .BusMuxOut(BusMuxOut), .BusMuxIn(BusMuxInR0));
+	Register R1(.Clear(Clear), .Clock(Clock), .Enable(R1in), .BusMuxOut(BusMuxOut), .BusMuxIn(BusMuxInR1));
+	Register R2(.Clear(Clear), .Clock(Clock), .Enable(R2in), .BusMuxOut(BusMuxOut), .BusMuxIn(BusMuxInR2));
 	Register R3(.Clear(Clear), .Clock(Clock), .Enable(R3in), .BusMuxOut(BusMuxOut), .BusMuxIn(BusMuxInR3));
 	Register R4(.Clear(Clear), .Clock(Clock), .Enable(R4in), .BusMuxOut(BusMuxOut), .BusMuxIn(BusMuxInR4));
-
+	Register R5(.Clear(Clear), .Clock(Clock), .Enable(R5in), .BusMuxOut(BusMuxOut), .BusMuxIn(BusMuxInR5));
+	Register R6(.Clear(Clear), .Clock(Clock), .Enable(R6in), .BusMuxOut(BusMuxOut), .BusMuxIn(BusMuxInR6));
 	Register R7(.Clear(Clear), .Clock(Clock), .Enable(R7in), .BusMuxOut(BusMuxOut), .BusMuxIn(BusMuxInR7));
+	Register R8(.Clear(Clear), .Clock(Clock), .Enable(R8in), .BusMuxOut(BusMuxOut), .BusMuxIn(BusMuxInR8));
+	Register R9(.Clear(Clear), .Clock(Clock), .Enable(R9in), .BusMuxOut(BusMuxOut), .BusMuxIn(BusMuxInR9));
+	Register R10(.Clear(Clear), .Clock(Clock), .Enable(R10in), .BusMuxOut(BusMuxOut), .BusMuxIn(BusMuxInR10));
+	Register R11(.Clear(Clear), .Clock(Clock), .Enable(R11in), .BusMuxOut(BusMuxOut), .BusMuxIn(BusMuxInR11));
+	Register R12(.Clear(Clear), .Clock(Clock), .Enable(R12in), .BusMuxOut(BusMuxOut), .BusMuxIn(BusMuxInR12));
+	Register R13(.Clear(Clear), .Clock(Clock), .Enable(R13in), .BusMuxOut(BusMuxOut), .BusMuxIn(BusMuxInR13));
+	Register R14(.Clear(Clear), .Clock(Clock), .Enable(R14in), .BusMuxOut(BusMuxOut), .BusMuxIn(BusMuxInR14));
+	Register R15(.Clear(Clear), .Clock(Clock), .Enable(R15in), .BusMuxOut(BusMuxOut), .BusMuxIn(BusMuxInR15));
 
+	
 	Register Zlo(.Clear(Clear), .Clock(Clock), .Enable(Zin), .BusMuxOut(ALU_Out[31:0]), .BusMuxIn(BusMuxInZlo));
 	Register Zhi(.Clear(Clear), .Clock(Clock), .Enable(Zin), .BusMuxOut(ALU_Out[63:32]), .BusMuxIn(BusMuxInZhi));
 	
