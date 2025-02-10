@@ -17,6 +17,7 @@ module ALU (
 	output reg [63:0] c
 );
 
+	wire [31:0] AddSub_Op;
 	wire [31:0] AddSub_Out;
 	wire [31:0] Div_Rem_Out;
 	wire [31:0] Div_Quo_Out;
@@ -27,13 +28,13 @@ module ALU (
 	wire [31:0] AddSub_In;
 	
 	// determines whether b should be 2's complement for sub
-	assign AddSub_Op = (SUB) ? ~(b) : b;
+	assign AddSub_Op = (SUB) ? (~b) : b;
 	
 	CLA_32B AddSub_DUT (
 		.a(a),
 		.b(AddSub_Op),
 		.c_in(SUB),
-		.s(AddSub_Out), // sum
+		.s(AddSub_Out) // sum
 	);
 	
 	Div Div_DUT (
