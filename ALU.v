@@ -14,13 +14,14 @@ module ALU (
 	input OR, 
 	input NEG, 
 	input NOT,
-	output reg [63:0] ALU_Out
+	output reg [63:0] c
 );
 
 	wire [31:0] AddSub_Out;
 	wire [31:0] Div_Rem_Out;
 	wire [31:0] Div_Quo_Out;
 	wire [31:0] Shift_Out;
+	wire [31:0] Logical_Out;
 	wire [63:0] Mul_Out;
 	
 	wire [31:0] AddSub_In;
@@ -59,11 +60,23 @@ module ALU (
 		.c(Shift_Out)
 	);
 	
+	ALU_Logical ALU_Logical_DUT (
+		.a(a),
+		.b(b),
+		.in_and(AND),
+		.in_or(OR),
+		.in_neg(NEG),
+		.in_not(NOT),
+		.c(Logical_Out)
+);
+	
 	always @ (*) begin
-		if (ADD | SUB) ALU_Out = {32'b0,AddSub_Out};
-		else if (DIV) ALU_Out = {Div_Rem_Out,Div_Quo_Out};
-		else if (MUL) ALU_Out = Mul_Out;
-		else if (SHR | SHRA | SHL | ROR | ROL) ALU_Out = Shift_Out;
+		if (ADD | SUB) c = {32'b0,AddSub_Out};
+		else if (DIV) c = {Div_Rem_Out,Div_Quo_Out};
+		else if (MUL) c = Mul_Out;
+		else if (SHR | SHRA | SHL | ROR | ROL) c = {32'b0,Shift_Out};
+		else if (AND | OR | NEG | NOT) c = {32'b0,Logical_Out};
+		else c = 64'b0;
 	end
 
 endmodule
