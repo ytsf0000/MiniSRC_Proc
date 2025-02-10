@@ -61,6 +61,7 @@ module DataPath_tb();
 		present_state <= next_state;
 		if (present_state == Done) begin
 			operation_state <= next_operation_state;
+			present_state <= Default;
 		end
 	end
 	
@@ -248,7 +249,7 @@ module DataPath_tb();
 			end
 			Done: begin
 				if (operation_state==NOT_s)begin
-					$stop
+					$stop;
 				end
 			end
 		endcase
