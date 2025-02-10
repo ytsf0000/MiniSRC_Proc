@@ -4,7 +4,7 @@ module DataPath_tb();
 	reg PCout, Zlowout, MDRout, R3out, R7out; // add any other signals to see in your simulation
 	reg MARin, Zin, PCin, MDRin, IRin, Yin;
 	reg IncPC, Read, R3in, R4in, R7in;
-	reg AND, OR, ADD;
+	reg AND, OR, ADD, SUB;
 	reg Clock;
 	reg [31:0] Mdatain;
 	
@@ -37,7 +37,7 @@ module DataPath_tb();
 		.AND(AND),
 		.OR(OR),
 		.ADD(ADD),
-		.SUB(1'b0), // this is to stop the alu from z values
+		.SUB(SUB), // this is to stop the alu from z values
 		.R3in(R3in),
 		.R4in(R4in), 
 		.R7in(R7in), 
@@ -116,6 +116,7 @@ module DataPath_tb();
 				AND = 1'b0;
 				OR = 1'b0;
 				ADD = 1'b0;
+				SUB = 1'b0;
 				// TODO set all register in to 0
 				R3in = 1'b0;
 				R4in = 1'b0;
@@ -191,7 +192,12 @@ module DataPath_tb();
 				Read = 1; 
 				MDRin = 1;
 				// TODO change this to specific register depending on operation state
-				Mdatain = 32'h2A2B8000; 
+				case (operation_state)
+					AND_s : Mdatain = 32'h2A2B8000;
+					OR_s : Mdatain = 32'h322b8000;
+					ADD_s : Mdatain = 32'h1a2b8000;
+					SUB_s : Mdatain = 32'h222b8000;
+				endcase
 			end
 			T2: begin
 				Zlowout = 0; 
@@ -217,13 +223,21 @@ module DataPath_tb();
 				
 				// TODO change this to specific register depending on operation state
 				R7out = 1; 
-				AND = 1; 
+				case (operation_state)
+					AND_s : AND = 1;
+					OR_s : OR = 1;
+					ADD_s : ADD = 1;
+					SUB_s : SUB = 1;
+				endcase
 				Zin = 1;
 			end
 			T5: begin
 				// TODO change this to specific register depending on operation state
 				R7out = 0; 
-				AND = 0; 
+				AND = 1'b0;
+				OR = 1'b0;
+				ADD = 1'b0;
+				SUB = 1'b0;
 				Zin = 0;
 				
 				Zlowout = 1; 
