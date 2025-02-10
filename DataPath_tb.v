@@ -1,10 +1,12 @@
 `timescale 1ns/10ps
 module DataPath_tb();
 
-	reg PCout, Zlowout, MDRout, R3out, R7out; // add any other signals to see in your simulation
+
+
+	reg PCout, Zlowout, MDRout, R0out, R1out, R2out, R3out, R4out, R5out, R6out, R7out, R8out, R9out, R10out, R11out, R12out, R13out, R14out, R15out; // add any other signals to see in your simulation
 	reg MARin, Zin, PCin, MDRin, IRin, Yin;
-	reg IncPC, Read, R3in, R4in, R7in;
-	reg AND, OR, ADD, SUB;
+	reg IncPC, Read, R1in, R2in, R3in, R4in, R5in, R6in, R7in, R8in, R9in, R10in, R11in, R12in, R13in, R14in, R15in;
+	reg AND, OR, ADD, SUB, SHR, SHRA, SHL;
 	reg Clock;
 	reg [31:0] Mdatain;
 	
@@ -38,6 +40,9 @@ module DataPath_tb();
 		.OR(OR),
 		.ADD(ADD),
 		.SUB(SUB), // this is to stop the alu from z values
+		.SHR(SHR),
+		.SHRA(SHRA),
+		.SHL(SHL),
 		.R3in(R3in),
 		.R4in(R4in), 
 		.R7in(R7in), 
@@ -120,6 +125,9 @@ module DataPath_tb();
 				OR = 1'b0;
 				ADD = 1'b0;
 				SUB = 1'b0;
+				SHR = 1'b0;
+				SHRA = 1'b0;
+				SHL = 1'b0;
 				// TODO set all register in to 0
 				R3in = 1'b0;
 				R4in = 1'b0;
@@ -200,6 +208,9 @@ module DataPath_tb();
 					OR_s : Mdatain = 32'h322b8000;
 					ADD_s : Mdatain = 32'h1a2b8000;
 					SUB_s : Mdatain = 32'h222b8000;
+					SHR_s : Mdatain = 32'h4A1B8000;
+					SHRA_s : Mdatain = 32'h521B8000;
+					SHL_s : Mdatain = 32'h5A1B8000;
 				endcase
 			end
 			T2: begin
@@ -231,16 +242,21 @@ module DataPath_tb();
 					OR_s : OR = 1;
 					ADD_s : ADD = 1;
 					SUB_s : SUB = 1;
+					SHR_s : SHR = 1;
+					SHRA_s : SHRA = 1;
+					SHL_s : SHL = 1;
+
 				endcase
 				Zin = 1;
 			end
 			T5: begin
 				// TODO change this to specific register depending on operation state
 				R7out = 0; 
-				AND = 1'b0;
-				OR = 1'b0;
-				ADD = 1'b0;
-				SUB = 1'b0;
+				AND = 0;
+				OR = 0;
+				ADD = 0;
+				SUB = 0;
+				SHR = 0;				
 				Zin = 0;
 				
 				Zlowout = 1; 
