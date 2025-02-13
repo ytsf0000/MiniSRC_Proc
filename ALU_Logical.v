@@ -14,9 +14,9 @@ module ALU_Logical (
 	wire [31:0] out_not;
 
 	//NOTE: For single register argument operations neg, not, input a is read only.
-	Complement_32B ALU_NEG (
+	Fast2complement ALU_NEG (
 		.enable(in_neg),
-		.in(a),
+		.in({{32{a[31]}},a}),
 		.out(out_neg)
 	);
 	
