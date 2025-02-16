@@ -164,6 +164,11 @@ module DataPath_tb();
 						Read = 1; 
 						MDRin = 1;
 					end
+					DIV_s: begin
+						Mdatain = 32'h0F000022;
+						Read = 1; 
+						MDRin = 1;
+					end
 					default: begin
 						Mdatain = 32'h00000022;
 						Read = 1; 
@@ -174,6 +179,14 @@ module DataPath_tb();
 			Reg_load1b: begin
 				case(operation_state)
 					MUL_s: begin
+						Read = 0; 
+						MDRin = 0;
+						// Blocking assignment so timing is not a concern for this state machine implementation
+						MDRout = 1; 
+						// TODO change this to specific register depending on operation state
+						R2in = 1;
+					end
+					DIV_s: begin
 						Read = 0; 
 						MDRin = 0;
 						// Blocking assignment so timing is not a concern for this state machine implementation
@@ -198,7 +211,16 @@ module DataPath_tb();
 						// change this to specific register depending on operation state
 						R2in = 0;
 						
-						Mdatain = 32'h88800024;
+						Mdatain = 32'hFFFF0121;
+						Read = 1; 
+						MDRin = 1;
+					end
+					DIV_s: begin
+						MDRout = 0;
+						// change this to specific register depending on operation state
+						R2in = 0;
+						
+						Mdatain = 32'hFFFF0121;
 						Read = 1; 
 						MDRin = 1;
 					end
@@ -223,6 +245,14 @@ module DataPath_tb();
 						// TODO change this to specific register depending on operation state
 						R6in = 1;
 					end
+					DIV_s: begin
+						Read = 0; 
+						MDRin = 0;
+				
+						MDRout = 1; 
+						// TODO change this to specific register depending on operation state
+						R6in = 1;
+					end
 					default: begin
 						Read = 0; 
 						MDRin = 0;
@@ -236,6 +266,11 @@ module DataPath_tb();
 			Reg_load3a: begin
 				case(operation_state)
 					MUL_s: begin
+						MDRout = 0;
+						// TODO change this to specific register depending on operation state
+						R6in = 0;
+					end
+					DIV_s: begin
 						MDRout = 0;
 						// TODO change this to specific register depending on operation state
 						R6in = 0;
@@ -254,6 +289,9 @@ module DataPath_tb();
 			Reg_load3b: begin
 				case(operation_state)
 					MUL_s: begin
+					
+					end
+					DIV_s: begin
 					
 					end
 					default: begin
@@ -292,7 +330,8 @@ module DataPath_tb();
 					OR_s : Mdatain = 32'h322b8000;
 					ADD_s : Mdatain = 32'h1a2b8000;
 					SUB_s : Mdatain = 32'h222b8000;
-					MUL_s: Mdatain = 32'h79300000;
+					MUL_s: Mdatain = 32'h81300000;
+					DIV_s: Mdatain = 32'h79300000;
 				endcase
 			end
 			T2: begin
@@ -312,6 +351,10 @@ module DataPath_tb();
 						R2out = 1;
 						Yin = 1;
 					end
+					DIV_s: begin
+						R2out = 1;
+						Yin = 1;
+					end
 					default: begin
 						// TODO change this to specific register depending on operation state
 						R3out = 1;
@@ -323,6 +366,10 @@ module DataPath_tb();
 				// TODO change this to specific register depending on operation state
 				case(operation_state)
 					MUL_s: begin
+						R2out = 0;
+						R6out = 1;
+					end
+					DIV_s: begin
 						R2out = 0;
 						R6out = 1;
 					end
@@ -339,6 +386,7 @@ module DataPath_tb();
 					ADD_s : ADD = 1;
 					SUB_s : SUB = 1;
 					MUL_s : MUL = 1;
+					DIV_s : DIV = 1;
 				endcase
 				Zin = 1;
 			end
@@ -351,12 +399,16 @@ module DataPath_tb();
 				ADD = 1'b0;
 				SUB = 1'b0;
 				MUL = 0;
+				DIV = 0;
 				Zin = 0;
 				
 				Zlowout = 1; 
 				// TODO change this to specific register depending on operation state
 				case(operation_state)
 					MUL_s: begin
+						LOin = 1;
+					end
+					DIV_s: begin
 						LOin = 1;
 					end
 					default: begin
@@ -372,7 +424,7 @@ module DataPath_tb();
 				HIin = 1;
 			end
 			Done: begin
-				if (operation_state==MUL_s)begin
+				if (operation_state==DIV_s)begin
 					$stop;
 				end
 			end
