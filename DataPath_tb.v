@@ -3,7 +3,7 @@ module DataPath_tb();
 
 	reg PCout, Zlowout, MDRout, R0out, R1out, R2out, R3out, R4out, R5out, R6out, R7out, R8out, R9out, R10out, R11out, R12out, R13out, R14out, R15out; // add any other signals to see in your simulation
 	reg MARin, Zin, PCin, MDRin, IRin, Yin;
-	reg IncPC, Read, R1in, R2in, R3in, R4in, R5in, R6in, R7in, R8in, R9in, R10in, R11in, R12in, R13in, R14in, R15in;
+	reg IncPC, Read, R0in, R1in, R2in, R3in, R4in, R5in, R6in, R7in, R8in, R9in, R10in, R11in, R12in, R13in, R14in, R15in;
 	reg AND, OR, ADD, SUB, SHR, SHRA, SHL, ROR, ROL, NEG, NOT;
 	reg Clock;
 	reg [31:0] Mdatain;
@@ -75,6 +75,8 @@ module DataPath_tb();
 	end
 	
 	always @(*) begin
+	
+		// this represents the d
 		case (present_state)
 			Default : next_state = Reg_load1a;
 			Reg_load1a : next_state = Reg_load1b;
@@ -90,6 +92,8 @@ module DataPath_tb();
 			T4 : next_state = T5;
 			T5 : next_state = Done;
 		endcase
+		
+		// this is the order of instructions executed in the state machine 
 		case (operation_state)
 			AND_s : next_operation_state = OR_s;
 			OR_s : next_operation_state = ADD_s;
@@ -114,8 +118,22 @@ module DataPath_tb();
 				Zlowout = 1'b0;
 				MDRout = 1'b0;
 				// TODO set all reg to 0 for other ops
+				R0out = 1'b0;
+				R1out = 1'b0;
+				R2out = 1'b0;
 				R3out = 1'b0;
+				R4out = 1'b0;
+				R5out = 1'b0;
+				R6out = 1'b0;
 				R7out = 1'b0;
+				R8out = 1'b0;
+				R9out = 1'b0;
+				R10out = 1'b0;
+				R11out = 1'b0;
+				R12out = 1'b0;
+				R13out = 1'b0;
+				R14out = 1'b0;
+				R15out = 1'b0;
 				MARin = 1'b0;
 				Zin = 1'b0;
 				PCin = 1'b0;
@@ -135,9 +153,22 @@ module DataPath_tb();
 				ROR = 1'b0;
 				ROL = 1'b0;
 				// TODO set all register in to 0
+				R0in = 1'b0;
+				R1in = 1'b0;
+				R2in = 1'b0;
 				R3in = 1'b0;
 				R4in = 1'b0;
+				R5in = 1'b0;
+				R6in = 1'b0;
 				R7in = 1'b0;
+				R8in = 1'b0;
+				R9in = 1'b0;
+				R10in = 1'b0;
+				R11in = 1'b0;
+				R12in = 1'b0;
+				R13in = 1'b0;
+				R14in = 1'b0;
+				R15in = 1'b0;
 				Clock = 1'b0;
 				Mdatain = 32'b0;
 			end
