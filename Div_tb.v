@@ -14,6 +14,7 @@ Div Test(
 
 reg signed [31:0] test_compare;
 reg signed [31:0] test_result;
+reg signed [31:0] test_remainder;
 reg [31:0] seed;
 
 integer i;
@@ -28,13 +29,14 @@ initial begin
 		#50; //arbitrary delay
 		
 		test_compare = a/b;
+		test_remainder = a%b;
 		test_result=res;
 		
 		$display("a: %d,b: %d, res: %d, remainder: %d", a,b,res,rem);
-		$display("true: %d, true remainder: %d, test: %d",test_compare,a%b,test_result);
+		$display("true: %d, true remainder: %d, test: %d",test_compare,test_remainder,test_result);
 		
 		
-		if (test_compare === test_result) 
+		if ((test_compare === test_result) && (test_remainder === rem))
 			$display ("Correct");
 		else begin
 			$display ("Incorrect");
