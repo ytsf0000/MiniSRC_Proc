@@ -1,8 +1,8 @@
 module Div (
     input  [31:0] a,
     input  [31:0] b,
-    output reg [31:0] quotient,
-    output reg [31:0] remainder
+    output reg [31:0] q,
+    output reg [31:0] r
 );
 
 	wire [31:0] signed_q, signed_r;
@@ -19,8 +19,8 @@ module Div (
    always @(*) begin
        // handle division by zero
        if (!b) begin
-           quotient  = 32'hFFFFFFFF;
-           remainder = 32'hFFFFFFFF;
+           q  = 32'hFFFFFFFF;
+           r = 32'hFFFFFFFF;
        end else begin
            // Initialize q and r
            unsigned_q = abs_a;
@@ -44,8 +44,8 @@ module Div (
 
            // Assign final values
            unsigned_r = r_temp[31:0];
-			  quotient = signed_q;
-			  remainder = signed_r;
+			  q = signed_q;
+			  r = signed_r;
        end
    end
 
