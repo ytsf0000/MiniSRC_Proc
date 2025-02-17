@@ -1,6 +1,7 @@
 module DataPath(
 	input PCout, //done
 	input Zlowout, //done
+	input Zhighout,
 	input MDRout, 
 	input LOout,
 	input HIout,
@@ -170,6 +171,7 @@ module DataPath(
 		.R14out(R14out),
 		.R15out(R15out),
 		.Zlowout(Zlowout),
+		.Zhighout(Zhighout),
 		.LOout(LOout),
 		.HIout(HIout),
 		.MDRout(MDRout),

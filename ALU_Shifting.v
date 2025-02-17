@@ -13,7 +13,14 @@ module ALU_Shifting (
 	reg [31:0] SHL_out;
 	reg [31:0] ROR_out;
 	reg [31:0] ROL_out;
-
+	
+	initial begin
+		SHR_out = 32'b0;
+		SHL_out = 32'b0;
+		ROR_out = 32'b0;
+		ROL_out = 32'b0;
+	end
+	
 	always @(*) begin
 		if (SHR | SHRA) c = SHR_out;
 		else if (SHL) c = SHL_out;
@@ -28,7 +35,7 @@ module ALU_Shifting (
 	
 	//Shift Right
 	always @(*) begin
-		if (SHR | SHR_out) begin
+		if (SHR | SHRA) begin
 			SHR_out = a;
 			// shift 1 pos
 			if (b[0]) begin

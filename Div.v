@@ -1,39 +1,54 @@
 module Div (
-	input [31:0] a,
-	input [31:0] b,
-	output [31:0] result,
-	output [31:0] remainderOut
+    input  [31:0] a,
+    input  [31:0] b,
+    output reg [31:0] q,
+    output reg [31:0] r
 );
 
-wire [31:0] dividend;
-Fast2complement DividendNeg(a[31],{{32{a[31]}},a},dividend);
+   reg sign_a;
+	reg sign_b;
+   reg [31:0] abs_a, abs_b;
+   reg [31:0] unsigned_q, unsigned_r;
+   reg [31:0] r_temp, a_shift;
+   integer i;
 
+   always @(*) begin
+       // handle division by zero
+       if (!b) begin
+           q  = 32'hFFFFFFFF;
+           r = 32'hFFFFFFFF;
+       end else begin
+           // sign of divisor, dividend
+           sign_a = a[31];
+           sign_b = b[31];
 
-wire [31:0]tmpResult;
-wire [31:0]divisor;
-Fast2complement DivisorNeg(b[31],{{32{b[31]}},b},divisor);
+           // find absolute values
+           abs_a = sign_a ? (~a + 1) : a;
+           abs_b = sign_b  ? (~b + 1) : b;
 
-wire [31:0]divisorArray[31:0];
-wire [31:0]remainder[32:0];
+           // Initialize q and r
+           unsigned_q = 0;
+           unsigned_r = 0;
+           r_temp = 0;
+           a_shift = abs_a;
 
-assign remainder[0]=32'b0;
+           // Non-restoring division algorithm
+           for (i = 31; i >= 0; i = i - 1) begin
+               r_temp = {r_temp[30:0], a_shift[31]};
+               a_shift = {a_shift[30:0], 1'b0};
+					if (r_temp >= abs_b) begin
+                   r_temp = r_temp - abs_b;
+                   unsigned_q[i] = 1'b1;
+               end
+           end
 
-genvar i;
-generate for (i = 0; i < 32; i = i + 1) begin: DivisionStep
-	Fast2complement stepDiv(~remainder[i][31],divisor,divisorArray[i]);
-	CLA_32B setp(
-		.a({remainder[i][30:0],dividend[31-i]}),
-		.b(divisorArray[i]),
-		.c_in(1'b0),
-		.s(remainder[i+1]),
-		.c_out()
-	);
-	 
-	assign tmpResult[31-i] = ~remainder[i+1][31];
-end endgenerate
+           // Assign final values
+           unsigned_r = r_temp;
 
-
-assign remainderOut=remainder[32];
-Fast2complement ResultCompl(a[31]^b[31],{{32{tmpResult[31]}},tmpResult},result);
+           // Restore signs
+           q = (sign_a ^ sign_b) ? (~unsigned_q + 1) : unsigned_q;
+           r = sign_a ? (~unsigned_r + 1) : unsigned_r;
+       end
+   end
 
 endmodule

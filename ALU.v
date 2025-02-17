@@ -25,8 +25,6 @@ module ALU (
 	wire [31:0] Logical_Out;
 	wire [63:0] Mul_Out;
 	
-	wire [31:0] AddSub_In;
-	
 	// determines whether b should be 2's complement for sub
 	assign AddSub_Op = (SUB) ? (~b) : b;
 	
@@ -40,8 +38,8 @@ module ALU (
 	Div Div_DUT (
 		.a(a),
 		.b(b),
-		.result(Div_Quo_Out),
-		.remainderOut(Div_Rem_Out)
+		.q(Div_Quo_Out),
+		.r(Div_Rem_Out)
 	);
 	
 	Mult Mult_DUT (

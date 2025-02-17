@@ -34,7 +34,7 @@ initial begin
 		$display("true: %d, true remainder: %d, test: %d",test_compare,a%b,test_result);
 		
 		
-		if (test_compare == test_result) 
+		if (test_compare === test_result) 
 			$display ("Correct");
 		else begin
 			$display ("Incorrect");
