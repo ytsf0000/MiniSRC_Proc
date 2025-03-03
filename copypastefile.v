@@ -1,5 +1,4 @@
 `timescale 1ns/10ps
-module DataPath_tb();
 
 	reg PCout, Zlowout, Zhighout, MDRout, HIout, LOout, R0out, R1out, R2out, R3out, R4out, R5out, R6out, R7out, R8out, R9out, R10out, R11out, R12out, R13out, R14out, R15out; // add any other signals to see in your simulation
 	reg MARin, Zin, PCin, MDRin, IRin, Yin, LOin, HIin;
@@ -70,7 +69,6 @@ module DataPath_tb();
 		.Yin(Yin), 
 		.LOin(LOin),
 		.HIin(HIin),
-		.R0in(R0in),
 		.R1in(R1in),
 		.R2in(R2in),
 		.R3in(R3in),
@@ -223,28 +221,25 @@ module DataPath_tb();
 				case (operation_state)
 					NEG_s:
 						begin
-						Mdatain = 32'hF0000022;
-						Read = 1; 
-						MDRin = 1;						end
+							Read = 0;
+						end
 					NOT_s:
 						begin
-						Mdatain = 32'hF0000022;
-						Read = 1; 
-						MDRin = 1;
+							Read = 0;
 						end
 					MUL_s: begin
-						Mdatain = 32'hF0000022;
+						Mdatain = 32'h0F000022;
 						Read = 1; 
 						MDRin = 1;
 					end
 					DIV_s: begin
-						Mdatain = 32'hF0000022;
+						Mdatain = 32'h0F000022;
 						Read = 1; 
 						MDRin = 1;
 					end
 					default:
 						begin
-							Mdatain = 32'hFFFEEE00;
+							Mdatain = 32'h00000022;
 							Read = 1; 
 							MDRin = 1;
 						end
@@ -257,8 +252,8 @@ module DataPath_tb();
 				MDRout = 1; 
 				// TODO change this to specific register depending on operation state
 				case (operation_state)
-					NEG_s:begin R0in=1;end
-					NOT_s:begin R0in=1;end
+					NEG_s:begin end
+					NOT_s:begin end
 					MUL_s: begin
 						R2in = 1;
 					end
@@ -272,7 +267,6 @@ module DataPath_tb();
 			Reg_load2a: begin
 				MDRout = 0;
 				// change this to specific register depending on operation state
-				R0in=0;
 				R3in = 0;
 				R2in = 0;
 				case (operation_state)
@@ -286,7 +280,7 @@ module DataPath_tb();
 						end
 					default:
 						begin
-							Mdatain = 32'h2;
+							Mdatain = 32'h00000004;
 							Read = 1; 
 							MDRin = 1;
 						end
@@ -357,16 +351,16 @@ module DataPath_tb();
 				MDRin = 1;
 				// TODO change this to specific register depending on operation state
 				case (operation_state)
-					AND_s : Mdatain = 32'h2A1B8000;
-					OR_s : Mdatain = 32'h321B8000;
-					ADD_s : Mdatain = 32'h1A1B8000;
-					SUB_s : Mdatain = 32'h221B8000;
+					AND_s : Mdatain = 32'h2A2B8000;
+					OR_s : Mdatain = 32'h322b8000;
+					ADD_s : Mdatain = 32'h1a2b8000;
+					SUB_s : Mdatain = 32'h222b8000;
 					MUL_s: Mdatain = 32'h81300000;
 					DIV_s: Mdatain = 32'h79300000;
 					SHR_s : Mdatain = 32'h4A1B8000;
 					SHRA_s : Mdatain = 32'h521B8000;
 					SHL_s : Mdatain = 32'h5A1B8000;
-					ROR_s : Mdatain = 32'h3a1b8000;
+					ROR_s : Mdatain = 32'h3a2b8000;
 					ROL_s : Mdatain = 32'h422b8000;
 					NEG_s : Mdatain = 32'h8a800000;
 					NOT_s : Mdatain = 32'h92800000;
