@@ -1,7 +1,7 @@
 module Register_r0(
-    output [31:0] BusMuxInR0;
-    input [31:0] BusMuxOut;
-    input clr, clk, enable, BAout;
+    output [31:0] BusMuxInR0,
+    input [31:0] BusMuxOut,
+    input clr, clk, enable, BAout
 );
 
 reg [31:0] q;
