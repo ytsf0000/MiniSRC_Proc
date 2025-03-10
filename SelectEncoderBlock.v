@@ -5,7 +5,7 @@ module SelectEncoderBlock(
 
 );
 
-    wire [3:0] Ra,Rb,Rc, Ra_sel, Rb_sel, Rc_sel;
+    wire [3:0] Ra,Rb,Rc; // Ra_sel, Rb_sel, Rc_sel;
     wire [3:0] decoderIn;
     wire [15:0] decoderOut;
 
@@ -15,12 +15,14 @@ module SelectEncoderBlock(
     assign Rc = IR[18:15];
 
     //Bitwise AND of Ra, Rb, Rc w/ their respective Gr:
-    assign Ra_sel = Ra & {4{Gra}};
-    assign Rb_sel = Rb & {4{Grb}};
-    assign Rc_sel = Rc & {4{Grc}};
+    //assign Ra_sel = Ra & {4{Gra}};
+    //assign Rb_sel = Rb & {4{Grb}};
+    //assign Rc_sel = Rc & {4{Grc}};
 
     //OR all select vals then put in decoder:
-    assign decoderIn = Ra_sel | Rb_sel | Rc_sel;
+    assign decoderIn = (Gra ? Ra : 4'b0000) |
+                       (Grb ? Rb : 4'b0000) |
+                       (Grc ? Rc : 4'b0000);
 
     // 4-to-16 Decoder
     Decoder4to16 decoder (
@@ -30,7 +32,7 @@ module SelectEncoderBlock(
 
     //Generate Rin & Rout Signals:
     assign Rin_Sig = decoderOut & {16{Rin}};
-    assign Rout_Sig = decoderOut & {16{Rout & BAout}};
+    assign Rout_Sig = decoderOut & {16{Rout | BAout}};
 
 endmodule
 
@@ -40,7 +42,8 @@ module Decoder4to16(
 );
 
     always @(*) begin
-        out = 16'b1 << in;  // One-hot encoding: Shift 1 by `in` positions
+		out = 16'b0; // Ensure default value
+		out = 16'b1 << in;  
     end
 
 endmodule
