@@ -44,11 +44,11 @@ begin
 			wordEnableReg[j]=(writeLatch && j[ADDRESS_WIDTH-1:0] == addressLatch);
 		end
 
-		if(1)
+		if(readLatch)
 		begin
 			for(j=0;j<(1<<ADDRESS_WIDTH);j=j+1)
 			begin
-				if(j[ADDRESS_WIDTH-1:0] == addressLatch && readLatch)
+				if(j[ADDRESS_WIDTH-1:0] == addressLatch)
 				begin
 			      data_out = words[j];
 				end
