@@ -36,7 +36,7 @@ initial begin
 	 // Write test w/ BAout = 0;
     clr = 0; enable = 1; BusMuxOut = 32'hACADACAD; BAout = 0;
     @(posedge clk); #5;
-    if (BusMuxInR0 === 32'bACADACAD) $display("Write Properly w/ BAout = 0");
+    if (BusMuxInR0 === 32'hACADACAD) $display("Write Properly w/ BAout = 0");
     else $display("Write w/ BAout = 0 failed, BusMuxIn = %h", BusMuxInR0);
 	 
 	 // Final cleanup

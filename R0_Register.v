@@ -6,12 +6,12 @@ module Register_r0(
 
 reg [31:0] q;
 
-always @ (posedge clk)
+always @ (posedge Clock)
     begin
-        if (clr) begin
+        if (Clear) begin
             q <= 32'b0;
         end
-        else if(enable)
+        else if(Enable)
             q <= BusMuxOut;
     end
 

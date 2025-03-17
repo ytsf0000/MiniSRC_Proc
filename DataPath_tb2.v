@@ -5,7 +5,8 @@ module DataPath_tb2();
 	reg MARin, Zin, PCin, MDRin, IRin, Yin, LOin, HIin;
 	reg IncPC, Read, R0in, R1in, R2in, R3in, R4in, R5in, R6in, R7in, R8in, R9in, R10in, R11in, R12in, R13in, R14in, R15in;
 	reg AND, OR, ADD, SUB, MUL, DIV, SHR, SHRA, SHL, ROR, ROL, NEG, NOT;
-  reg RAMWrite;
+	reg Write, Rin, Rout, Gra, Grb, Grc, BAout, Cout;
+	
 	reg Clock;
 	wire Clear;
 	
@@ -24,70 +25,45 @@ module DataPath_tb2();
 	assign Clear = 0;
 	
 	DataPath DataPath_DUT (
-		.PCout(PCout), 
-		.Zlowout(Zlowout), 
+		.PCout(PCout), //done
+		.Zlowout(Zlowout), //done
 		.Zhighout(Zhighout),
-		.MDRout(MDRout),
-		.R0out(R0out),
-		.R1out(R1out),
-		.R2out(R2out),
-		.R3out(R3out), 
-		.R4out(R4out),
-		.R5out(R5out),
-		.R6out(R6out),
-		.R7out(R7out),
-		.R8out(R8out),
-		.R9out(R9out),
-		.R10out(R10out),
-		.R11out(R11out),
-		.R12out(R12out),
-		.R13out(R13out),
-		.R14out(R14out),
-		.R15out(R15out),
-		.HIout(HIout),
+		.MDRout(MDRout), 
 		.LOout(LOout),
+		.HIout(HIout),
 		.IncPC(IncPC), 
-		.Read(Read), 
-		.AND(AND),
-		.OR(OR),
+		.Read(Read), //Read is for MDR read signal, done
+		.AND(AND), 
 		.ADD(ADD),
-		.SUB(SUB), // this is to stop the alu from z values
+		.SUB(SUB), 
+		.MUL(MUL), 
+		.DIV(DIV), 
 		.SHR(SHR),
 		.SHRA(SHRA),
-		.SHL(SHL),
-		.ROR(ROR),
-		.ROL(ROL),
-		.MUL(MUL),
-		.DIV(DIV),
-		.NEG(NEG),
+		.SHL(SHL), 
+		.ROR(ROR), 
+		.ROL(ROL), 
+		.OR(OR), 
+		.NEG(NEG), 
 		.NOT(NOT),
 		.MARin(MARin), 
 		.Zin(Zin), 
-		.PCin(PCin), 
-		.MDRin(MDRin), 
-		.IRin(IRin), 
-		.Yin(Yin), 
-    .RAMWrite(RAMWrite),
+		.PCin(PCin),
+		.MDRin(MDRin),
+		.IRin(IRin),
+		.Yin(Yin),
+		.Write(Write),
 		.LOin(LOin),
 		.HIin(HIin),
-		.R1in(R1in),
-		.R2in(R2in),
-		.R3in(R3in),
-		.R4in(R4in), 
-		.R5in(R5in),
-		.R6in(R6in),
-		.R7in(R7in),
-		.R8in(R8in),
-		.R9in(R9in),	
-		.R10in(R10in),
-		.R11in(R11in),
-		.R12in(R12in),
-		.R13in(R13in),
-		.R14in(R14in),
-		.R15in(R15in),
-		.Clock(Clock), 
+		.Clock(Clock),
 		.Clear(Clear),
-		.Mdatain(Mdatain)
+		.Mdatain(Mdatain),
+		.Rin(Rin),
+		.Rout(Rout),
+		.Gra(Gra),
+		.Grb(Grb),
+		.Grc(Grc),
+		.BAout(BAout)
 	);
 	
 	// add test logic here
@@ -182,8 +158,6 @@ module DataPath_tb2();
 				Yin = 1'b0;
 				IncPC = 1'b0;
 				Read = 1'b0;
-        RAMRead = 0;
-        RAMWrite = 0;
 				// TODO set all alu inputs to 0
 				AND = 1'b0;
 				OR = 1'b0;
