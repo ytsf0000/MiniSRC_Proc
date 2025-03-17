@@ -42,7 +42,6 @@ module DataPath(
 	input MDRin, //done
 	input IRin, //done
 	input Yin, //done
-	input RAMRead,
 	input RAMWrite,
 	input LOin,
 	input HIin,
@@ -111,9 +110,10 @@ module DataPath(
 	Register Zlo(.Clear(Clear), .Clock(Clock), .Enable(Zin), .BusMuxOut(ALU_Out[31:0]), .BusMuxIn(BusMuxInZlo));
 	Register Zhi(.Clear(Clear), .Clock(Clock), .Enable(Zin), .BusMuxOut(ALU_Out[63:32]), .BusMuxIn(BusMuxInZhi));
 	
-	Register MAR(.Clear(Clear), .Clock(Clock), .Enable(MARin), .BusMuxOut(BusMuxOut)); // connect to memory bus later
+	wire [31:0]MAROut;
+	Register MAR(.Clear(Clear), .Clock(Clock), .Enable(MARin), .BusMuxOut(BusMuxOut),.BusMuxIn(MAROut)); // connect to memory bus later
 	MDR MDR(.Clear(Clear), .Clock(Clock), .MDRin(MDRin), .BusMuxOut(BusMuxOut), .Mdatain(Mdatain), .Read(Read), .BusMuxIn(BusMuxInMDR));
-	RAM RAM(.Clock(Clock),.read(RAMRead),.write(RAMWrite),.address(BusMuxOut),.data_in(BusMuxOut),.data_out(Mdatain));
+	RAM RAM(.Clock(Clock),.read(Read),.write(RAMWrite),.address(MAROut),.data_in(BusMuxOut),.data_out(Mdatain));
 	
 	ALU ALU_DUT (
 		.a(ALU_A),
