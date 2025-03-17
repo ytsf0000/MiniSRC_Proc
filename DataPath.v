@@ -113,7 +113,7 @@ module DataPath(
 	
 	Register MAR(.Clear(Clear), .Clock(Clock), .Enable(MARin), .BusMuxOut(BusMuxOut)); // connect to memory bus later
 	MDR MDR(.Clear(Clear), .Clock(Clock), .MDRin(MDRin), .BusMuxOut(BusMuxOut), .Mdatain(Mdatain), .Read(Read), .BusMuxIn(BusMuxInMDR));
-	RAM RAM(.Clock(Clock),.read(RAMRead),.write(RAMWrite),.address(BusMuxOut),.data_in(BusMuxOut),.data_out(Mdatain),.complete());
+	RAM RAM(.Clock(Clock),.read(RAMRead),.write(RAMWrite),.address(BusMuxOut),.data_in(BusMuxOut),.data_out(Mdatain));
 	
 	ALU ALU_DUT (
 		.a(ALU_A),
