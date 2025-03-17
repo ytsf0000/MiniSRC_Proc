@@ -80,15 +80,14 @@ module DataPath(
 	wire [31:0] BusMuxOut; 
 
 	assign ALU_A = (IncPC) ? 32'b1 : Y_Out;
-	assign BusMuxInR0 = 32'b0;
-	
+
 	// Register File
 	Register PC(.Clear(Clear), .Clock(Clock), .Enable(PCin), .BusMuxOut(BusMuxOut), .BusMuxIn(BusMuxInPC));
 	
 	Register IR(.Clear(Clear), .Clock(Clock), .Enable(IRin), .BusMuxOut(BusMuxOut), .BusMuxIn(BusMuxInIR));
 	Register RY(.Clear(Clear), .Clock(Clock), .Enable(Yin), .BusMuxOut(BusMuxOut), .BusMuxIn(Y_Out));
 	
-	//Register R0(.Clear(1'b1), .Clock(Clock), .Enable(1'b0), .BusMuxOut(BusMuxOut), .BusMuxIn(BusMuxInR0));
+	Register R0(.Clear(Clear), .Clock(Clock), .Enable(R0in), .BusMuxOut(BusMuxOut), .BusMuxIn(BusMuxInR0));
 	Register R1(.Clear(Clear), .Clock(Clock), .Enable(R1in), .BusMuxOut(BusMuxOut), .BusMuxIn(BusMuxInR1));
 	Register R2(.Clear(Clear), .Clock(Clock), .Enable(R2in), .BusMuxOut(BusMuxOut), .BusMuxIn(BusMuxInR2));
 	Register R3(.Clear(Clear), .Clock(Clock), .Enable(R3in), .BusMuxOut(BusMuxOut), .BusMuxIn(BusMuxInR3));
