@@ -35,7 +35,6 @@ endgenerate
 integer j;
 always @ (*)
 begin
-
 		readLatch=read;
 		writeLatch=write;
 		dataLatch=data_in;
@@ -49,7 +48,7 @@ begin
 		begin
 			for(j=0;j<(1<<ADDRESS_WIDTH);j=j+1)
 			begin
-				if(j[ADDRESS_WIDTH-1:0] == addressLatch)
+				if(j[ADDRESS_WIDTH-1:0] == addressLatch && readLatch)
 				begin
 			      data_out = words[j];
 				end
@@ -58,6 +57,5 @@ begin
 
 		readLatch=0;
 		writeLatch=0;
-
 end
 endmodule
