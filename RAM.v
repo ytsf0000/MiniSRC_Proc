@@ -6,9 +6,6 @@ module RAM #(parameter DATA_WIDTH = 32, ADDRESS_WIDTH = 9,MEM_SIZE=512)(
 	output reg [DATA_WIDTH-1:0]data_out
 );
 
-reg readLatch,writeLatch;
-reg [ADDRESS_WIDTH-1:0]addressLatch;
-reg [DATA_WIDTH-1:0] dataLatch;
 
 reg [DATA_WIDTH-1:0] q;
 initial q=0;
@@ -24,7 +21,7 @@ generate
 
 		Register reg_module(
 			1'b0,!Clock,wordEnableReg[i],
-			dataLatch,
+			data_in,
 			words[i]
 		);
 	end
@@ -35,27 +32,24 @@ endgenerate
 integer j;
 always @ (*)
 begin
-		readLatch=read;
-		writeLatch=write;
-		dataLatch=data_in;
 
 		for(j=0;j<(1<<ADDRESS_WIDTH);j=j+1)
 		begin
-			wordEnableReg[j]=(writeLatch && j[ADDRESS_WIDTH-1:0] == addressLatch);
+			wordEnableReg[j]=(write && j[ADDRESS_WIDTH-1:0] == address);
 		end
 
-		if(readLatch)
+		if(read)
 		begin
 			for(j=0;j<(1<<ADDRESS_WIDTH);j=j+1)
 			begin
-				if(j[ADDRESS_WIDTH-1:0] == addressLatch)
+				if(j[ADDRESS_WIDTH-1:0] == address)
 				begin
 			      data_out = words[j];
 				end
 			end
 		end
 
-		readLatch=0;
-		writeLatch=0;
+		read=0;
+		write=0;
 end
 endmodule
