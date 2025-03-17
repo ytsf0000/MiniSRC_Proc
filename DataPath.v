@@ -5,22 +5,6 @@ module DataPath(
 	input MDRout, 
 	input LOout,
 	input HIout,
-	input R0out,
-	input R1out,
-	input R2out,
-	input R3out,
-	input R4out,
-	input R5out,
-	input R6out,
-	input R7out,
-	input R8out,
-	input R9out,
-	input R10out,
-	input R11out,
-	input R12out,
-	input R13out,
-	input R14out,
-	input R15out,
 	input IncPC, 
 	input Read, //Read is for MDR read signal, done
 	input AND, 
@@ -45,26 +29,52 @@ module DataPath(
 	input RAMWrite,
 	input LOin,
 	input HIin,
-	input R0in,
-	input R1in,
-	input R2in,
-	input R3in, //done
-	input R4in, //done
-	input R5in,
-	input R6in,
-	input R7in, //done
-	input R8in,
-	input R9in,
-	input R10in,
-	input R11in,
-	input R12in,
-	input R13in,
-	input R14in,
-	input R15in,
 	input Clock, //done
 	input Clear,
 	input [31:0] Mdatain //done
+	input Rin,
+	input Rout,
+	input Gra,
+	input Grb,
+	input Grc,
+	input BAout,
 );
+	//Input Reg.
+	wire R0in;
+	wire R1in;
+	wire R2in;
+	wire R3in;
+	wire R4in;
+	wire R5in;
+	wire R6in;
+	wire R7in;
+	wire R8in;
+	wire R9in;
+	wire R10in;
+	wire R11in;
+	wire R12in;
+	wire R13in;
+	wire R14in;
+	wire R15in;
+
+	//Output Reg.
+	wire R0out;
+	wire R1out;
+	wire R2out;
+	wire R3out;
+	wire R4out;
+	wire R5out;
+	wire R6out;
+	wire R7out;
+	wire R8out;
+	wire R9out;
+	wire R10out;
+	wire R11out;
+	wire R12out;
+	wire R13out;
+	wire R14out;
+	wire R15out;
+
 	wire [31:0] Y_Out;
 	wire [31:0] ALU_A;
 	wire [63:0] ALU_Out;
@@ -87,7 +97,7 @@ module DataPath(
 	Register IR(.Clear(Clear), .Clock(Clock), .Enable(IRin), .BusMuxOut(BusMuxOut), .BusMuxIn(BusMuxInIR));
 	Register RY(.Clear(Clear), .Clock(Clock), .Enable(Yin), .BusMuxOut(BusMuxOut), .BusMuxIn(Y_Out));
 	
-	Register R0(.Clear(Clear), .Clock(Clock), .Enable(R0in), .BusMuxOut(BusMuxOut), .BusMuxIn(BusMuxInR0));
+	Register_r0 R0(.Clear(Clear), .Clock(Clock), .Enable(R0in), .BusMuxOut(BusMuxOut), .BusMuxInR0(BusMuxInR0), .BAout(BAout));
 	Register R1(.Clear(Clear), .Clock(Clock), .Enable(R1in), .BusMuxOut(BusMuxOut), .BusMuxIn(BusMuxInR1));
 	Register R2(.Clear(Clear), .Clock(Clock), .Enable(R2in), .BusMuxOut(BusMuxOut), .BusMuxIn(BusMuxInR2));
 	Register R3(.Clear(Clear), .Clock(Clock), .Enable(R3in), .BusMuxOut(BusMuxOut), .BusMuxIn(BusMuxInR3));
@@ -180,5 +190,16 @@ module DataPath(
 		.BusMuxOut(BusMuxOut)
 	);
 	
+	//Select and Encoder Block:
+	SelectEncoderBlock SEB(
+		.Rin_Sig({R0in, R1in, R2in, R3in, R4in, R5in, R6in, R7in, R8in, R9in, R10in, R11in, R12in, R13in, R14in, R15in}), 
+		.Rout_Sig({R0out, R1out, R2out, R3out, R4out, R5out, R6out, R7out, R8out, R9out, R10out, R11out, R12out, R13out, R14out, R15out}), 
+		.IR(IRin), 
+		.Gra(Gra),
+		.Grb(Grb), 
+		.Grc(Grc), 
+		.Rin(Rin),
+		.BAout(BAout)
+	);
 
 endmodule 

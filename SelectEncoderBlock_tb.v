@@ -21,7 +21,7 @@ module SelectEncoderBlock_tb;
 
     initial begin
         $display("Testing SelectEncoderBlock...");
-        $monitor("Time = %0t | IR = %h | Rin_Sig = %b | Rout_Sig = %b", $time, IR, Rin_Sig, Rout_Sig);
+        $monitor("Time = %0t | IR = %b | Rin_Sig = %b | Rout_Sig = %b", $time, IR, Rin_Sig, Rout_Sig);
 
         // Initialize signals
         Gra = 0; Grb = 0; Grc = 0; Rin = 0; Rout = 0; BAout = 0;
