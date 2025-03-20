@@ -136,7 +136,7 @@ module DataPath(
 	
 	Register MAR(.Clear(Clear), .Clock(Clock), .Enable(MARin), .BusMuxOut(BusMuxOut),.BusMuxIn(MAROut)); // connect to memory bus later
 	MDR MDR(.Clear(Clear), .Clock(Clock), .MDRin(MDRin), .BusMuxOut(BusMuxOut), .Mdatain(Mdatain), .Read(Read), .BusMuxIn(BusMuxInMDR));
-	RAM RAM(.Clock(Clock),.read(Read),.write(Write),.address(MAROut),.data_in(BusMuxOut),.data_out(Mdatain));
+	RAM RAM(.read(Read),.write(Write),.address(MAROut),.data_in(BusMuxOut),.data_out(Mdatain));
 	
 	ALU ALU_DUT (
 		.a(ALU_A),

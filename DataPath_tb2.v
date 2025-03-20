@@ -166,7 +166,15 @@ module DataPath_tb2();
 				Yin = 1'b0;
 				IncPC = 1'b0;
 				Read = 1'b0;
-				// TODO set all alu 	s to 0
+				Write = 1'b0;
+				Rin = 1'b0;
+				Rout = 1'b0;
+				Gra = 1'b0;
+				Grb = 1'b0;
+				Grc = 1'b0;
+				BAout = 1'b0;
+				Cout = 1'b0;
+				// TODO set all alu inputs to 0
 				AND = 1'b0;
 				OR = 1'b0;
 				ADD = 1'b0;
@@ -213,7 +221,6 @@ module DataPath_tb2();
         MARin=0;
         IncPC=0;
         Zin=0;
-
         Zlowout=1;
         PCin=1;
         Read=1;
@@ -225,7 +232,6 @@ module DataPath_tb2();
         PCin=0;
         Read=0;
         MDRin=0;
-
         MDRout=1;
         IRin=1;
       end
@@ -233,10 +239,8 @@ module DataPath_tb2();
       begin
         MDRout=0;
         IRin=0;
-
         case (operation_state)
-          Ld:begin
-            // Grb, BAout, Yin
+          Ld,Ldi:begin
             Grb=1;
             BAout=1;
             Yin=1;
@@ -246,11 +250,10 @@ module DataPath_tb2();
       T4 : 
       begin
         case(operation_state)
-          Ld:begin
+          Ld,Ldi:begin
             Grb=0;
             BAout=0;
             Yin=0;
-
             Cout=1;
             ADD=1;
             Zin=1;
@@ -264,19 +267,27 @@ module DataPath_tb2();
             Cout=0;
             ADD=0;
             Zin=0;
-
             Zlowout=1;
             MARin=1;
           end
+					Ldi:begin
+            Cout=0;
+            ADD=0;
+            Zin=0;
+            Zlowout=1;
+						Gra=1;
+						Rin=1;
+					end
         endcase
       end
       T6 : 
       begin
         case(operation_state)
-          Ld:begin
+          Ld,Ldi:begin
             Zlowout=0;
             MARin=0;
-
+						Gra=0;
+						Rin=0;
             Read=1;
             MDRin=1;
           end
@@ -285,7 +296,7 @@ module DataPath_tb2();
       T7 : 
       begin
         case(operation_state)
-          Ld:begin
+          Ld,Ldi:begin
             Read=0;
             MDRin=0;
             MDRout=1;
