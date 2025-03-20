@@ -9,7 +9,7 @@ module DataPath_tb2();
 	
 	reg Clock;
 	wire Clear;
-	
+	wire [31:0] OutPort_Out;
 	reg [31:0] Mdatain;
 	
 	parameter Ld=4'h0,Ldi=4'h1,St=4'h2,Addi=4'h3,Andi=4'h4,Ori=4'h5,Brzr=4'h6,Brnz=4'h7,Brpl=4'h8,Brmi=4'h9,Jr=4'hA,Jal=4'hB,Mfhi=4'hC,Mflo=4'hD,In=4'hE,Out=4'hF;
@@ -47,23 +47,28 @@ module DataPath_tb2();
 		.NEG(NEG), 
 		.NOT(NOT),
 		.MARin(MARin), 
-		.Zin(Zin), 
-		.PCin(PCin),
-		.MDRin(MDRin),
-		.IRin(IRin),
-		.Yin(Yin),
+		.Zin(Zin), //done
+		.PCin(PCin), //done
+		.MDRin(MDRin), //done
+		.IRin(IRin), //done
+		.Yin(Yin), //done
 		.Write(Write),
 		.LOin(LOin),
 		.HIin(HIin),
-		.Clock(Clock),
+		.Clock(Clock), //done
 		.Clear(Clear),
-		.Mdatain(Mdatain),
+		.INPort_In(INPort_In), //done
 		.Rin(Rin),
 		.Rout(Rout),
 		.Gra(Gra),
 		.Grb(Grb),
 		.Grc(Grc),
-		.BAout(BAout)
+		.Cout(Cout),
+		.BAout(BAout),
+		.CONin(CONin),
+		.Strobe(Strobe), // This is the ready signal for the output port, asserted by testbench
+		.Out(Out),
+		.OutPort_Out(OutPort_Out)
 	);
 	
 	// add test logic here
@@ -158,7 +163,7 @@ module DataPath_tb2();
 				Yin = 1'b0;
 				IncPC = 1'b0;
 				Read = 1'b0;
-				// TODO set all alu inputs to 0
+				// TODO set all alu 	s to 0
 				AND = 1'b0;
 				OR = 1'b0;
 				ADD = 1'b0;

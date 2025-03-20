@@ -31,7 +31,7 @@ module DataPath(
 	input HIin,
 	input Clock, //done
 	input Clear,
-	input [31:0] Mdatain, //done
+	input [31:0] INPort_In, //done
 	input Rin,
 	input Rout,
 	input Gra,
@@ -40,7 +40,9 @@ module DataPath(
 	input Cout,
 	input BAout,
 	input CONin,
-	input Strobe // This is the ready signal for the output port, asserted by testbench
+	input Strobe, // This is the ready signal for the output port, asserted by testbench
+	input Out,
+	output [31:0] OutPort_Out
 );
 	//Input Reg.
 	wire R0in;
@@ -78,6 +80,7 @@ module DataPath(
 	wire R13out;
 	wire R14out;
 	wire R15out;
+	wire ROutOut;
 	
 	wire BranchOut;
 
@@ -225,9 +228,10 @@ module DataPath(
 		.Clear(Clear), 
 		.Clock(Clock), 
 		.Strobe(Strobe),
-		.Input(),
-		.BusMuxIn()
+		.Input(INPort_In),
+		.BusMuxIn(BusMuxIn_In)
 	);
 	
+	Register OutPort_DUT(.Clear(Clear), .Clock(Clock), .Enable(Out), .BusMuxOut(OutPort_Out), .BusMuxIn(BusMuxOut));
 	
 endmodule 
