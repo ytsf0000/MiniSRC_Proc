@@ -19,7 +19,6 @@ module DataPath_tb2();
 	parameter Default = 4'h0,T0=4'h1,T1=4'h2,T2=4'h3,T3=4'h4,T4=4'h5,T5=4'h6,T6=4'h7,T7=4'h8,Done=4'h9;
   
 	reg [3:0] operation_state;
-	reg [3:0] next_operation_state;
 	
 	reg [3:0] next_state;
 	reg [3:0] present_state;
@@ -89,7 +88,6 @@ module DataPath_tb2();
 		#5;
 		present_state <= next_state;
 		if (present_state == Done) begin
-			operation_state <= next_operation_state;
 			present_state <= Default;
 		end
 	end
@@ -107,26 +105,6 @@ module DataPath_tb2();
 			T5 : next_state = T6;
 			T6 : next_state = T7;
       T7 : next_state = T0;
-		endcase
-		
-		// this is the order of instructions executed in the state machine 
-		case (operation_state)
-      Ld : next_state = Ldi;
-      Ldi : next_state = St;
-      St : next_state = Addi;
-      Addi : next_state = Andi;
-      Andi : next_state = Ori;
-      Ori : next_state = Brzr;
-      Brzr : next_state = Brnz;
-      Brnz : next_state = Brpl;
-      Brpl : next_state = Brmi;
-      Brmi : next_state = Jr;
-      Jr : next_state = Jal;
-      Jal : next_state = Mfhi;
-      Mfhi : next_state = Mflo;
-      Mflo : next_state = In;
-      In : next_state = Out;
-      Out : next_state = Ld;
 		endcase
 	end
 	
@@ -234,6 +212,25 @@ module DataPath_tb2();
         MDRin=0;
         MDRout=1;
         IRin=1;
+
+				case (DataPath_DUT.BusMuxInIR[31:26])
+					0 : operation_state = Ld;
+					1 : operation_state = Ldi;
+					2 : operation_state = St;
+					3 : operation_state = Add;
+					4 : operation_state = Ori;
+					5 : operation_state = Brzr;
+					6 : operation_state = Brzr;
+					7 : operation_state = Brnz;
+					8 : operation_state = Brpl;
+					9 : operation_state = Brmi;
+					10 : operation_state = Jr;
+					11 : operation_state = Jal;
+					12 : operation_state = Mfhi;	
+					13 : operation_state = Mflo;
+					14 : operation_state = In;
+					15 : operation_state = Out;
+				endcase
       end
       T3 : 
       begin
