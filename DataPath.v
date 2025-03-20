@@ -41,8 +41,9 @@ module DataPath(
 	input BAout,
 	input CONin,
 	input Strobe, // This is the ready signal for the output port, asserted by testbench
-	input Out,
-	output [31:0] OutPort_Out
+	input OutPortIn,
+	output [31:0] OutPort_Out,
+	output BranchOut
 );
 	//Input Reg.
 	wire R0in;
@@ -81,11 +82,10 @@ module DataPath(
 	wire R14out;
 	wire R15out;
 	wire ROutOut;
-	
-	wire BranchOut;
 
 	wire [31:0] Y_Out;
 	wire [31:0] ALU_A;
+	wire [31:0] ALU_B;
 	wire [63:0] ALU_Out;
 	wire [31:0] BusMuxInPC, BusMuxInR0, BusMuxInR1, 
 					BusMuxInR2, BusMuxInR3, BusMuxInR4, 
@@ -97,7 +97,7 @@ module DataPath(
 					BusMuxInLO, BusMuxInHI, BusMuxIn_In;
 			
 	wire [31:0] BusMuxOut; 
-	
+	wire [31:0] Mdatain;
 	wire [31:0] C_Sign_Extended;
 	
 	assign ALU_A = (IncPC) ? 32'b1 : Y_Out;
@@ -133,6 +133,7 @@ module DataPath(
 	Register Zhi(.Clear(Clear), .Clock(Clock), .Enable(Zin), .BusMuxOut(ALU_Out[63:32]), .BusMuxIn(BusMuxInZhi));
 	
 	wire [31:0]MAROut;
+	
 	Register MAR(.Clear(Clear), .Clock(Clock), .Enable(MARin), .BusMuxOut(BusMuxOut),.BusMuxIn(MAROut)); // connect to memory bus later
 	MDR MDR(.Clear(Clear), .Clock(Clock), .MDRin(MDRin), .BusMuxOut(BusMuxOut), .Mdatain(Mdatain), .Read(Read), .BusMuxIn(BusMuxInMDR));
 	RAM RAM(.Clock(Clock),.read(Read),.write(Write),.address(MAROut),.data_in(BusMuxOut),.data_out(Mdatain));
@@ -209,7 +210,7 @@ module DataPath(
 	SelectEncoderBlock SEB(
 		.Rin_Sig({R0in, R1in, R2in, R3in, R4in, R5in, R6in, R7in, R8in, R9in, R10in, R11in, R12in, R13in, R14in, R15in}), 
 		.Rout_Sig({R0out, R1out, R2out, R3out, R4out, R5out, R6out, R7out, R8out, R9out, R10out, R11out, R12out, R13out, R14out, R15out}), 
-		.IR(IRin), 
+		.IR(BusMuxInIR), 
 		.Gra(Gra),
 		.Grb(Grb), 
 		.Grc(Grc), 
@@ -232,6 +233,6 @@ module DataPath(
 		.BusMuxIn(BusMuxIn_In)
 	);
 	
-	Register OutPort_DUT(.Clear(Clear), .Clock(Clock), .Enable(Out), .BusMuxOut(OutPort_Out), .BusMuxIn(BusMuxOut));
+	Register OutPort_DUT(.Clear(Clear), .Clock(Clock), .Enable(OutPortIn), .BusMuxOut(BusMuxOut), .BusMuxIn(OutPort_Out));
 	
 endmodule 

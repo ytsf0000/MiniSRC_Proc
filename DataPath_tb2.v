@@ -2,15 +2,17 @@
 module DataPath_tb2();
 
 	reg PCout, Zlowout, Zhighout, MDRout, HIout, LOout, R0out, R1out, R2out, R3out, R4out, R5out, R6out, R7out, R8out, R9out, R10out, R11out, R12out, R13out, R14out, R15out; // add any other signals to see in your simulation
-	reg MARin, Zin, PCin, MDRin, IRin, Yin, LOin, HIin;
+	reg MARin, Zin, PCin, MDRin, IRin, Yin, LOin, HIin, INPort_In, CONin;
 	reg IncPC, Read, R0in, R1in, R2in, R3in, R4in, R5in, R6in, R7in, R8in, R9in, R10in, R11in, R12in, R13in, R14in, R15in;
 	reg AND, OR, ADD, SUB, MUL, DIV, SHR, SHRA, SHL, ROR, ROL, NEG, NOT;
 	reg Write, Rin, Rout, Gra, Grb, Grc, BAout, Cout;
 	
 	reg Clock;
 	wire Clear;
+	wire BranchOut;
 	wire [31:0] OutPort_Out;
 	reg [31:0] Mdatain;
+	reg Strobe;
 	
 	parameter Ld=4'h0,Ldi=4'h1,St=4'h2,Addi=4'h3,Andi=4'h4,Ori=4'h5,Brzr=4'h6,Brnz=4'h7,Brpl=4'h8,Brmi=4'h9,Jr=4'hA,Jal=4'hB,Mfhi=4'hC,Mflo=4'hD,In=4'hE,Out=4'hF;
 
@@ -67,8 +69,9 @@ module DataPath_tb2();
 		.BAout(BAout),
 		.CONin(CONin),
 		.Strobe(Strobe), // This is the ready signal for the output port, asserted by testbench
-		.Out(Out),
-		.OutPort_Out(OutPort_Out)
+		.OutPortIn(OutPortIn), // this is the control signal for the output port
+		.OutPort_Out(OutPort_Out), // this is also an output
+		.BranchOut(BranchOut) // use this signal to see if the branch occurs or not: 1 = branch, 0 = no branch
 	);
 	
 	// add test logic here
