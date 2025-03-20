@@ -37,7 +37,10 @@ module DataPath(
 	input Gra,
 	input Grb,
 	input Grc,
-	input BAout
+	input Cout,
+	input BAout,
+	input CONin,
+	input Strobe // This is the ready signal for the output port, asserted by testbench
 );
 	//Input Reg.
 	wire R0in;
@@ -56,6 +59,7 @@ module DataPath(
 	wire R13in;
 	wire R14in;
 	wire R15in;
+	wire RINout;
 
 	//Output Reg.
 	wire R0out;
@@ -74,6 +78,8 @@ module DataPath(
 	wire R13out;
 	wire R14out;
 	wire R15out;
+	
+	wire BranchOut;
 
 	wire [31:0] Y_Out;
 	wire [31:0] ALU_A;
@@ -85,12 +91,16 @@ module DataPath(
 					BusMuxInR11, BusMuxInR12, BusMuxInR13, 
 					BusMuxInR14, BusMuxInR15, BusMuxInZlo, 
 					BusMuxInZhi, BusMuxInMDR, BusMuxInIR,
-					BusMuxInLO, BusMuxInHI;
+					BusMuxInLO, BusMuxInHI, BusMuxIn_In;
 			
 	wire [31:0] BusMuxOut; 
-
+	
+	wire [31:0] C_Sign_Extended;
+	
 	assign ALU_A = (IncPC) ? 32'b1 : Y_Out;
-
+	assign ALU_B = (Cout) ? C_Sign_Extended : BusMuxOut;
+	assign C_Sign_Extended = {{13{BusMuxInIR[18]}},BusMuxInIR[18:0]};
+	
 	// Register File
 	Register PC(.Clear(Clear), .Clock(Clock), .Enable(PCin), .BusMuxOut(BusMuxOut), .BusMuxIn(BusMuxInPC));
 	
@@ -126,7 +136,7 @@ module DataPath(
 	
 	ALU ALU_DUT (
 		.a(ALU_A),
-		.b(BusMuxOut),
+		.b(ALU_B),
 		.ADD(ADD | IncPC), 
 		.SUB(SUB), 
 		.MUL(MUL), 
@@ -165,6 +175,7 @@ module DataPath(
 		.BusMuxInR14(BusMuxInR14),
 		.BusMuxInR15(BusMuxInR15),
 		.BusMuxInMDR(BusMuxInMDR),
+		.BusMuxIn_In(BusMuxIn_In), // data from input port
 		.PCout(PCout), 
 		.R0out(R0out),
 		.R1out(R1out),
@@ -182,6 +193,7 @@ module DataPath(
 		.R13out(R13out),
 		.R14out(R14out),
 		.R15out(R15out),
+		.RINout(RINout), // input port control signal to output register contents 
 		.Zlowout(Zlowout),
 		.Zhighout(Zhighout),
 		.LOout(LOout),
@@ -202,7 +214,20 @@ module DataPath(
 		.BAout(BAout)
 	);
 	
-	
-	
+	ConFF ConFF_DUT(
+		.CONin(CONin),
+		.IR(BusMuxInIR[20:19]), // only bits 20 and 19 from the IR register should be input here.
+		.Bus(BusMuxOut),
+		.BranchOut(BranchOut)
+	);
 
+	InPort InPort_DUT(
+		.Clear(Clear), 
+		.Clock(Clock), 
+		.Strobe(Strobe),
+		.Input(),
+		.BusMuxIn()
+	);
+	
+	
 endmodule 

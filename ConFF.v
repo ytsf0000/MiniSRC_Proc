@@ -5,9 +5,7 @@ module ConFF (
 	output reg BranchOut
 );
 
-	initial begin BranchOut = 0
-	
-	wire not_zero; // for the output of nor gate
+	initial begin BranchOut = 0; end
 	
 	wire brzr; // branch if 0
 	wire brnz; // branch if not 0
@@ -16,9 +14,7 @@ module ConFF (
 	wire dff_in;
 	
 	reg [3:0] decoder_out;
-	
-	OR(not_zero, Bus);
-	
+
 	// decoder
 	always @ (*) begin
 		case(IR)
@@ -29,12 +25,12 @@ module ConFF (
 		endcase
 	end
 	
-	assign brzr = (~not_zero) & decoder_out[0]; // branch if 0
-	assign brnz = not_zero & decoder_out[1]; // branch if not 0
+	assign brzr = (!Bus) & decoder_out[0]; // branch if 0 (using boolean instead of bitwise operators here for Bus)
+	assign brnz = (Bus) && decoder_out[1]; // branch if not 0 (using boolean instead of bitwise operators here for Bus)
 	assign brpl = (~Bus[31]) & decoder_out[2]; // branch if pos
 	assign brmi = Bus[31] & decoder_out[3]; // branch if neg
 	
-	OR(dff_in, brzr, brnz, brpl, brmi);
+	assign dff_in = brzr | brnz | brpl | brmi;
 	
 	always @ (posedge CONin) begin
 		BranchOut <= dff_in;
