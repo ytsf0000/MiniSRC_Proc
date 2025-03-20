@@ -30,10 +30,10 @@ module RAM #(parameter DATA_WIDTH = 32, ADDRESS_WIDTH = 9,MEM_SIZE=512)(
 	integer m;
 	reg [DATA_WIDTH-1:0]LOADED_MEMORY[511:0];
 	initial begin
-		$readmem("output.mem", LOADED_MEMORY);
-		for(m=0;m<16;m++)
+		$readmemh("C:\\Users\\antoi\\Documents\\school\\MIPS_Proc\\output.mem", LOADED_MEMORY);
+		for(m=0;m<511;m=m+1)
 		begin
-			flush=0
+			flush=0;
 			registers_in=LOADED_MEMORY[m];
 			flush=1;
 			flush=0;
