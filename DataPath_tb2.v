@@ -13,10 +13,10 @@ module DataPath_tb2();
 	wire [31:0] OutPort_Out;
 	reg [31:0] Mdatain;
 	reg Strobe;
-	
+
 	parameter Ld=4'h0,Ldi=4'h1,St=4'h2,Addi=4'h3,Andi=4'h4,Ori=4'h5,Brzr=4'h6,Brnz=4'h7,Brpl=4'h8,Brmi=4'h9,Jr=4'hA,Jal=4'hB,Mfhi=4'hC,Mflo=4'hD,In=4'hE,Out=4'hF;
 
-	parameter Default = 4'h0,T0=4'h1,T1=4'h2,T2=4'h3,T3=4'h4,T4=4'h5,T5=4'h6,T6=4'h7,T7=4'h8,Done=4'h9;
+	parameter T0=4'h0,T1=4'h1,T2=4'h2,T3=4'h3,T4=4'h4,T5=4'h5,T6=4'h6,T7=4'h7,Done=4'h8,Default = 4'h9;
   
 	reg [3:0] operation_state;
 	
@@ -79,17 +79,18 @@ module DataPath_tb2();
 		forever #10 Clock <= ~ Clock;
 	end
 	
+	integer instruction;
 	initial begin
+		instruction=0;
 		present_state <= Default;
 		operation_state <= Ld;
 	end
 	
 	always @ (negedge Clock) begin
 		#5;
+		if(present_state==T7)
+			instruction=instruction+1;
 		present_state <= next_state;
-		if (present_state == Done) begin
-			present_state <= Default;
-		end
 	end
 	
 	always @(*) begin
@@ -104,7 +105,13 @@ module DataPath_tb2();
 			T4 : next_state = T5;
 			T5 : next_state = T6;
 			T6 : next_state = T7;
-      T7 : next_state = T0;
+      T7 : begin
+				next_state = Default;
+				if(instruction>=12'h1FF) begin
+					next_state=Done;
+				end
+			end
+			Done:next_state=Done;
 		endcase
 	end
 	
@@ -186,6 +193,8 @@ module DataPath_tb2();
 				Clock = 1'b0;
 				Mdatain = 32'b0;
 			end
+			Done:
+				$stop;
 			T0 : 
       begin
         PCout=1;
@@ -213,7 +222,7 @@ module DataPath_tb2();
         MDRout=1;
         IRin=1;
 
-				case (DataPath_DUT.BusMuxInIR[31:26])
+				case (DataPath_DUT.BusMuxInIR[31:27])
 					0 : operation_state = Ld;
 					1 : operation_state = Ldi;
 					2 : operation_state = St;
@@ -237,7 +246,7 @@ module DataPath_tb2();
         MDRout=0;
         IRin=0;
         case (operation_state)
-          Ld,Ldi:begin
+          Ld,Ldi,St:begin
             Grb=1;
             BAout=1;
             Yin=1;
@@ -247,7 +256,7 @@ module DataPath_tb2();
       T4 : 
       begin
         case(operation_state)
-          Ld,Ldi:begin
+          Ld,Ldi,St:begin
             Grb=0;
             BAout=0;
             Yin=0;
@@ -275,31 +284,53 @@ module DataPath_tb2();
 						Gra=1;
 						Rin=1;
 					end
+					St:begin
+						Cout=0;
+            ADD=0;
+            Zin=0;
+						Zlowout=1;
+            MARin=1;
+					end
         endcase
       end
       T6 : 
       begin
         case(operation_state)
-          Ld,Ldi:begin
+          Ld:begin
             Zlowout=0;
             MARin=0;
-						Gra=0;
-						Rin=0;
             Read=1;
             MDRin=1;
           end
+					Ldi:begin
+						Zlowout=0;
+						Gra=0;
+						Rin=0;
+					end
+					St:begin
+            Zlowout=0;
+            MARin=0;
+						Gra=1;
+						BAout=1;
+						Write=1;
+					end
         endcase
       end
       T7 : 
       begin
         case(operation_state)
-          Ld,Ldi:begin
+          Ld:begin
             Read=0;
             MDRin=0;
             MDRout=1;
             Gra=1;
             Rin=1;
           end
+					St:begin
+						Gra=0;
+						BAout=0;
+						Write=0;
+					end
         endcase
 
       end

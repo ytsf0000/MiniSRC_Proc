@@ -7,7 +7,6 @@ module RAM #(parameter DATA_WIDTH = 32, ADDRESS_WIDTH = 9,MEM_SIZE=512)(
 
 
 	// loading memory file
-	integer m;
 	reg [DATA_WIDTH-1:0]MEMORY[MEM_SIZE-1:0];
 	initial begin
 		$readmemh("C:\\Users\\antoi\\Documents\\school\\MIPS_Proc\\output.mem", MEMORY);
