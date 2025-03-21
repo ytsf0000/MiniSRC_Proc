@@ -217,7 +217,7 @@ module DataPath_tb2();
 					0 : operation_state = Ld;
 					1 : operation_state = Ldi;
 					2 : operation_state = St;
-					3 : operation_state = Add;
+					3 : operation_state = Addi;
 					4 : operation_state = Ori;
 					5 : operation_state = Brzr;
 					6 : operation_state = Brzr;
