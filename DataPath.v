@@ -42,6 +42,7 @@ module DataPath(
 	input CONin,
 	input Strobe, // This is the ready signal for the output port, asserted by testbench
 	input OutPortIn,
+	input OutPortOut,
 	output [31:0] OutPort_Out,
 	output BranchOut
 );
@@ -179,7 +180,8 @@ module DataPath(
 		.BusMuxInR14(BusMuxInR14),
 		.BusMuxInR15(BusMuxInR15),
 		.BusMuxInMDR(BusMuxInMDR),
-		.BusMuxIn_In(BusMuxIn_In), // data from input port
+		.BusMuxIn_In(BusMuxIn_In),
+		.BusMuxOutPort(OutPort_Out), // data from input port
 		.PCout(PCout), 
 		.R0out(R0out),
 		.R1out(R1out),
@@ -197,7 +199,8 @@ module DataPath(
 		.R13out(R13out),
 		.R14out(R14out),
 		.R15out(R15out),
-		.RINout(RINout), // input port control signal to output register contents 
+		.RINout(RINout),
+		.OutPortout(OutPortOut), // input port control signal to output register contents 
 		.Zlowout(Zlowout),
 		.Zhighout(Zhighout),
 		.LOout(LOout),
@@ -215,7 +218,8 @@ module DataPath(
 		.Grb(Grb), 
 		.Grc(Grc), 
 		.Rin(Rin),
-		.BAout(BAout)
+		.BAout(BAout),
+		.Rout(Rout)
 	);
 	
 	ConFF ConFF_DUT(

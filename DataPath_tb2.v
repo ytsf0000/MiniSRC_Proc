@@ -5,7 +5,7 @@ module DataPath_tb2();
 	reg MARin, Zin, PCin, MDRin, IRin, Yin, LOin, HIin, INPort_In, CONin;
 	reg IncPC, Read, R0in, R1in, R2in, R3in, R4in, R5in, R6in, R7in, R8in, R9in, R10in, R11in, R12in, R13in, R14in, R15in;
 	reg AND, OR, ADD, SUB, MUL, DIV, SHR, SHRA, SHL, ROR, ROL, NEG, NOT;
-	reg Write, Rin, Rout, Gra, Grb, Grc, BAout, Cout;
+	reg Write, Rin, Rout, Gra, Grb, Grc, BAout, Cout, OutPortIn, OutPortOut;
 	
 	reg Clock;
 	wire Clear;
@@ -69,6 +69,7 @@ module DataPath_tb2();
 		.CONin(CONin),
 		.Strobe(Strobe), // This is the ready signal for the output port, asserted by testbench
 		.OutPortIn(OutPortIn), // this is the control signal for the output port
+		.OutPortOut(OutPortOut), // output outport to busmux out
 		.OutPort_Out(OutPort_Out), // this is also an output
 		.BranchOut(BranchOut) // use this signal to see if the branch occurs or not: 1 = branch, 0 = no branch
 	);
@@ -250,6 +251,16 @@ module DataPath_tb2();
             Grb=1;
             BAout=1;
             Yin=1;
+					end
+					In:begin
+						Gra=1;
+						Rin=1;
+						OutPortOut=1;
+					end
+					Out:begin
+						Gra=1;
+						Rout=1;
+						OutPortIn=1;
           end
         endcase
       end
@@ -264,6 +275,16 @@ module DataPath_tb2();
             ADD=1;
             Zin=1;
           end
+					In:begin
+						Gra=0;
+						Rin=0;
+						OutPortOut=0;
+					end
+					Out:begin
+						Gra=0;
+						Rout=0;
+						OutPortIn=0;
+					end
         endcase
       end
       T5 : 
@@ -311,7 +332,7 @@ module DataPath_tb2();
             Zlowout=0;
             MARin=0;
 						Gra=1;
-						BAout=1;
+						Rout=1;
 						Write=1;
 					end
         endcase
@@ -328,7 +349,7 @@ module DataPath_tb2();
           end
 					St:begin
 						Gra=0;
-						BAout=0;
+						Rout=0;
 						Write=0;
 					end
         endcase

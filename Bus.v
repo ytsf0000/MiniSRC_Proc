@@ -3,14 +3,14 @@ module Bus (
 	input [31:0] BusMuxInR0, BusMuxInR1, BusMuxInR2, BusMuxInR3, BusMuxInR4, BusMuxInR5, BusMuxInR6, BusMuxInR7,
 					BusMuxInR8, BusMuxInR9, BusMuxInR10, BusMuxInR11, BusMuxInR12, BusMuxInR13, BusMuxInR14, BusMuxInR15,
 					BusMuxInHi, BusMuxInLo, BusMuxInZhi, BusMuxInZlo, BusMuxInPC, BusMuxInMDR, BusMuxInPort, BusMuxInCin,
-					BusMuxIn_In,
+					BusMuxIn_In, BusMuxOutPort,
 
 	//Enoder
 	input R0out, R1out, R2out, R3out, R4out, R5out, 
 			R6out, R7out, R8out, R9out, R10out, R11out, 
 			R12out, R13out, R14out, R15out, HIout, LOout, 
 			Zhighout, Zlowout, PCout, MDRout, InPortout, 
-			Cout, RINout,
+			Cout, RINout,OutPortout,
 
 	//Output of Bus Mux:
 	output [31:0] BusMuxOut
@@ -44,6 +44,7 @@ always @ (*) begin
 	else if(InPortout) q = BusMuxInPort;
 	else if(Cout) q = BusMuxInCin;
 	else if(RINout) q = BusMuxIn_In;
+	else if(OutPortout) q = BusMuxOutPort;
 	else q = 32'b0;
 end
 
