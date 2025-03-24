@@ -1,8 +1,9 @@
 // Created with SRC-ASM (https://github.com/davlaf/elec374-assembler)
-  @1 9880001B // brzr R1, 27       
-  @2 9888001B // brnz R1, 27       
-  @3 9890001B // brpl R1, 27       
-  @4 9898001B // brmi R1, 27     
+  @0 9880001B // brzr R1, 27       
+  @1 9888001B // brnz R1, 27       
+  @2 9890001B // brpl R1, 27       
+  @3 9898001B // brmi R1, 27  
+  @4 00000000   
   @5 00000000    
   @6 00000000      
   @7 00000000

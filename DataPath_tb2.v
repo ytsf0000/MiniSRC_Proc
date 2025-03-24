@@ -228,7 +228,7 @@ module DataPath_tb2();
 					2 : operation_state = St;
 					3 : operation_state = Addi;
 					4 : operation_state = Ori;
-					5 : operation_state = Brzr;
+					5'b10011 : operation_state = Brzr;
 					6 : operation_state = Brnz;
 					7 : operation_state = Brpl;
 					8 : operation_state = Brmi;
