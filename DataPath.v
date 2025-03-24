@@ -180,6 +180,8 @@ module DataPath(
 		.BusMuxInR13(BusMuxInR13),
 		.BusMuxInR14(BusMuxInR14),
 		.BusMuxInR15(BusMuxInR15),
+		.BusMuxInLO(BusMuxInLO),
+		.BusMuxInHI(BusMuxInHI),
 		.BusMuxInMDR(BusMuxInMDR),
 		.BusMuxIn_In(BusMuxIn_In),
 		.BusMuxOutPort(OutPort_Out), // data from input port

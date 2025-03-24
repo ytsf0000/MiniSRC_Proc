@@ -279,6 +279,16 @@ module DataPath_tb2();
 						Rin = 1;
 						PCout = 1;
 					end
+					Mfhi:begin
+						Gra=1;
+						Rin=1;
+						HIout=1;
+					end
+					Mflo:begin
+						Gra=1;
+						Rin=1;
+						LOout=1;
+					end
 					In:begin
 						Gra=1;
 						Rin=1;
@@ -346,6 +356,16 @@ module DataPath_tb2();
 						Gra = 1;
 						Rout = 1;
 						PCin = 1;
+					end
+					Mfhi:begin
+						Gra=0;
+						Rin=0;
+						HIout=0;
+					end
+					Mflo:begin
+						Gra=0;
+						Rin=0;
+						LOout=0;
 					end
 					In:begin
 						Gra=0;
