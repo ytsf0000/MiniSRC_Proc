@@ -229,16 +229,15 @@ module DataPath_tb2();
 					3 : operation_state = Addi;
 					4 : operation_state = Ori;
 					5 : operation_state = Brzr;
-					6 : operation_state = Brzr;
-					7 : operation_state = Brnz;
-					8 : operation_state = Brpl;
-					9 : operation_state = Brmi;
-					10 : operation_state = Jr;
-					11 : operation_state = Jal;
-					12 : operation_state = Mfhi;	
-					13 : operation_state = Mflo;
-					14 : operation_state = In;
-					15 : operation_state = Out;
+					6 : operation_state = Brnz;
+					7 : operation_state = Brpl;
+					8 : operation_state = Brmi;
+					9 : operation_state = Jr;
+					10 : operation_state = Jal;
+					11 : operation_state = Mfhi;	
+					12 : operation_state = Mflo;
+					13 : operation_state = In;
+					14 : operation_state = Out;
 				endcase
       end
       T3 : 
@@ -250,6 +249,11 @@ module DataPath_tb2();
             Grb=1;
             BAout=1;
             Yin=1;
+		  end
+		  Brzr,Brnz,Brpl,Brmi:begin
+			Gra=1;
+			Rout = 1;
+			CONin = 1;
           end
         endcase
       end
@@ -264,56 +268,77 @@ module DataPath_tb2();
             ADD=1;
             Zin=1;
           end
+		   Brzr,Brnz,Brpl,Brmi:begin
+			Gra=0;
+			Rout=0;
+			CONin = 0;
+			PCout = 1;
+			Yin = 1;
+		   end
         endcase
       end
       T5 : 
       begin
         case(operation_state)
-          Ld:begin
-            Cout=0;
-            ADD=0;
-            Zin=0;
-            Zlowout=1;
-            MARin=1;
-          end
-					Ldi:begin
-            Cout=0;
-            ADD=0;
-            Zin=0;
-            Zlowout=1;
-						Gra=1;
-						Rin=1;
-					end
-					St:begin
-						Cout=0;
-            ADD=0;
-            Zin=0;
-						Zlowout=1;
-            MARin=1;
-					end
+			Ld:begin
+				Cout=0;
+				ADD=0;
+				Zin=0;
+				Zlowout=1;
+				MARin=1;
+          	end
+			Ldi:begin
+				Cout=0;
+				ADD=0;
+				Zin=0;
+				Zlowout=1;
+				Gra=1;
+				Rin=1;
+			end
+			St:begin
+				Cout=0;
+				ADD=0;
+				Zin=0;
+				Zlowout=1;
+				MARin=1;
+			end
+			Brzr,Brnz,Brpl,Brmi:begin
+				PCout = 0;
+				Yin = 0;
+				Cout = 1;
+				ADD = 1;
+				Zin = 1;
+			end
         endcase
       end
       T6 : 
       begin
         case(operation_state)
-          Ld:begin
-            Zlowout=0;
-            MARin=0;
-            Read=1;
-            MDRin=1;
-          end
-					Ldi:begin
-						Zlowout=0;
-						Gra=0;
-						Rin=0;
-					end
-					St:begin
-            Zlowout=0;
-            MARin=0;
-						Gra=1;
-						BAout=1;
-						Write=1;
-					end
+			Ld:begin
+				Zlowout=0;
+				MARin=0;
+				Read=1;
+				MDRin=1;
+			end
+			Ldi:begin
+				Zlowout=0;
+				Gra=0;
+				Rin=0;
+			end
+			St:begin
+				Zlowout=0;
+				MARin=0;
+				Gra=1;
+				BAout=1;
+				Write=1;
+			end
+			Brzr,Brnz,Brpl,Brmi:begin
+				Cout = 0;
+				ADD = 0;
+				Zin = 0;
+				Zlowout = 1;
+				PCin = 1;
+			end
         endcase
       end
       T7 : 
@@ -326,11 +351,11 @@ module DataPath_tb2();
             Gra=1;
             Rin=1;
           end
-					St:begin
-						Gra=0;
-						BAout=0;
-						Write=0;
-					end
+			St:begin
+				Gra=0;
+				BAout=0;
+				Write=0;
+			end
         endcase
 
       end
