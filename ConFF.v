@@ -6,8 +6,6 @@ module ConFF (
 	output reg BranchOut
 );
 
-	initial begin BranchOut = 0; end
-	
 	wire brzr; // branch if 0
 	wire brnz; // branch if not 0
 	wire brpl; // branch if pos

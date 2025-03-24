@@ -3,10 +3,10 @@ module DataPath_tb2();
 
 	reg PCout, Zlowout, Zhighout, MDRout, HIout, LOout, R0out, R1out, R2out, R3out, R4out, R5out, R6out, R7out, R8out, R9out, R10out, R11out, R12out, R13out, R14out, R15out; // add any other signals to see in your simulation
 	reg MARin, Zin, PCin, MDRin, IRin, Yin, LOin, HIin, INPort_In, CONin;
-	reg IncPC, Read, R0in, R1in, R2in, R3in, R4in, R5in, R6in, R7in, R8in, R9in, R10in, R11in, R12in, R13in, R14in, R15in;
+	reg IncPC, Read, R0in, R1in, R2in, R3in, R4in, R5in, R6in, R7in, R8in, R9in, R10in, R11in, R12in, R13in, R14in, R15in, RAin;
 	reg AND, OR, ADD, SUB, MUL, DIV, SHR, SHRA, SHL, ROR, ROL, NEG, NOT;
 	reg Write, Rin, Rout, Gra, Grb, Grc, BAout, Cout, OutPortIn, OutPortOut;
-	
+	reg BranchTaken;
 	reg Clock;
 	wire Clear;
 	wire BranchOut;
@@ -71,7 +71,8 @@ module DataPath_tb2();
 		.OutPortIn(OutPortIn), // this is the control signal for the output port
 		.OutPortOut(OutPortOut), // output outport to busmux out
 		.OutPort_Out(OutPort_Out), // this is also an output
-		.BranchOut(BranchOut) // use this signal to see if the branch occurs or not: 1 = branch, 0 = no branch
+		.BranchOut(BranchOut), // use this signal to see if the branch occurs or not: 1 = branch, 0 = no branch
+		.RAin(RAin)
 	);
 	
 	// add test logic here
@@ -194,6 +195,8 @@ module DataPath_tb2();
 				Clock = 1'b0;
 				Mdatain = 32'b0;
 				CONin = 1'b0;
+				BranchTaken = 1'b0;
+				OutPortIn = 1'b0;
 			end
 			Done:
 				$stop;
@@ -231,10 +234,12 @@ module DataPath_tb2();
 					5'b01100 : operation_state = Addi;
 					5'b01101 : operation_state = Andi;
 					5'b01110 : operation_state = Ori;
-					5'b10011 : operation_state = Brzr;
-					5'b10111 : operation_state = Brnz;
-					5'b11011 : operation_state = Brpl;
-					5'b11111 : operation_state = Brmi;
+					5'b10011 : case(DataPath_DUT.BusMuxInIR[20:19])
+						2'b00: operation_state = Brzr;
+						2'b01: operation_state = Brnz;
+						2'b10: operation_state = Brpl;
+						2'b11: operation_state = Brmi;
+					endcase
 					5'b10100 : operation_state = Jr;
 					5'b10101 : operation_state = Jal;
 					12 : operation_state = Mfhi;	
@@ -262,11 +267,17 @@ module DataPath_tb2();
 						Gra = 1;
 						Rout = 1;
 						CONin = 1;
+						BranchTaken = BranchOut;
 					end
-					Jr, Jal:begin
+					Jr:begin
 						Gra = 1;
 						Rout = 1;
 						PCin = 1;
+					end
+					Jal: begin
+						RAin = 1;
+						Rin = 1;
+						PCout = 1;
 					end
 					In:begin
 						Gra=1;
@@ -322,10 +333,19 @@ module DataPath_tb2();
 						PCout = 1;
 						Yin = 1;
 					end
-					Jr, Jal:begin
+					Jr:begin
 						Gra = 0;
 						Rout = 0;
 						PCin = 0;
+					end
+					Jal: begin
+						RAin = 0;
+						Rin = 0;
+						PCout = 0;
+						
+						Gra = 1;
+						Rout = 1;
+						PCin = 1;
 					end
 					In:begin
 						Gra=0;
@@ -378,9 +398,14 @@ module DataPath_tb2();
 				Brzr,Brnz,Brpl,Brmi:begin
 					PCout = 0;
 					Yin = 0;
-					Cout = 1;
 					ADD = 1;
+					Cout = 1;
 					Zin = 1;
+				end
+				Jal: begin
+					Gra = 0;
+					Rout = 0;
+					PCin = 0;
 				end
         endcase
       end
@@ -407,16 +432,21 @@ module DataPath_tb2();
 					end
 					Brzr,Brnz,Brpl,Brmi:begin
 						Cout = 0;
-						ADD = 0;
 						Zin = 0;
+						ADD = 0;
 						Zlowout = 1;
-						PCin = 1;
+						if (BranchTaken)
+							PCin = 1;
 					end
         endcase
       end
       T7 : 
       begin
         case(operation_state)
+		  			Brzr,Brnz,Brpl,Brmi:begin
+						Zlowout = 0;
+						PCin = 0;
+					end
           Ld:begin
             Read=0;
             MDRin=0;

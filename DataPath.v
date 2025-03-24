@@ -43,6 +43,7 @@ module DataPath(
 	input Strobe, // This is the ready signal for the output port, asserted by testbench
 	input OutPortIn,
 	input OutPortOut,
+	input RAin,
 	output [31:0] OutPort_Out,
 	output BranchOut
 );
@@ -119,7 +120,7 @@ module DataPath(
 	Register R5(.Clear(Clear), .Clock(Clock), .Enable(R5in), .BusMuxOut(BusMuxOut), .BusMuxIn(BusMuxInR5));
 	Register R6(.Clear(Clear), .Clock(Clock), .Enable(R6in), .BusMuxOut(BusMuxOut), .BusMuxIn(BusMuxInR6));
 	Register R7(.Clear(Clear), .Clock(Clock), .Enable(R7in), .BusMuxOut(BusMuxOut), .BusMuxIn(BusMuxInR7));
-	Register R8(.Clear(Clear), .Clock(Clock), .Enable(R8in), .BusMuxOut(BusMuxOut), .BusMuxIn(BusMuxInR8));
+	Register R8(.Clear(Clear), .Clock(Clock), .Enable(R8in | RAin), .BusMuxOut(BusMuxOut), .BusMuxIn(BusMuxInR8));
 	Register R9(.Clear(Clear), .Clock(Clock), .Enable(R9in), .BusMuxOut(BusMuxOut), .BusMuxIn(BusMuxInR9));
 	Register R10(.Clear(Clear), .Clock(Clock), .Enable(R10in), .BusMuxOut(BusMuxOut), .BusMuxIn(BusMuxInR10));
 	Register R11(.Clear(Clear), .Clock(Clock), .Enable(R11in), .BusMuxOut(BusMuxOut), .BusMuxIn(BusMuxInR11));
