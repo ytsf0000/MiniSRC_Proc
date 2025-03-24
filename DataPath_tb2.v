@@ -226,8 +226,9 @@ module DataPath_tb2();
 					0 : operation_state = Ld;
 					1 : operation_state = Ldi;
 					2 : operation_state = St;
-					3 : operation_state = Addi;
-					4 : operation_state = Ori;
+					5'b01100 : operation_state = Addi;
+					5'b01101 : operation_state = Andi;
+					5'b01110 : operation_state = Ori;
 					5 : operation_state = Brzr;
 					6 : operation_state = Brzr;
 					7 : operation_state = Brnz;
@@ -269,12 +270,28 @@ module DataPath_tb2();
             ADD=1;
             Zin=1;
           end
-			 Addi, Andi, Ori: begin
+			 Addi: begin
 				Grb = 0;
 				Rout = 0;
 				Yin = 0;
 				Cout = 1;
 				ADD = 1;
+				Zin = 1;
+			 end
+			 Andi: begin
+				Grb = 0;
+				Rout = 0;
+				Yin = 0;
+				Cout = 1;
+				AND = 1;
+				Zin = 1;
+			 end
+			 Ori: begin
+				Grb = 0;
+				Rout = 0;
+				Yin = 0;
+				Cout = 1;
+				OR = 1;
 				Zin = 1;
 			 end
         endcase
@@ -305,6 +322,16 @@ module DataPath_tb2();
             MARin=1;
 					end
 				
+				Addi, Andi, Ori: begin
+					Cout = 0;
+					AND = 0;
+					ADD = 0;
+					OR = 0;
+					Zin = 0;
+					Zlowout = 1;
+					Gra = 1;
+					Rin = 1;
+				end
         endcase
       end
       T6 : 
