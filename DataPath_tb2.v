@@ -242,8 +242,8 @@ module DataPath_tb2();
 					endcase
 					5'b10100 : operation_state = Jr;
 					5'b10101 : operation_state = Jal;
-					12 : operation_state = Mfhi;	
-					13 : operation_state = Mflo;
+					5'b11001 : operation_state = Mfhi;	
+					5'b11000 : operation_state = Mflo;
 					5'b10110 : operation_state = In;
 					5'b10111 : operation_state = Out;
 				endcase

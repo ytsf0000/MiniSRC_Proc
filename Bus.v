@@ -3,7 +3,7 @@ module Bus (
 	input [31:0] BusMuxInR0, BusMuxInR1, BusMuxInR2, BusMuxInR3, BusMuxInR4, BusMuxInR5, BusMuxInR6, BusMuxInR7,
 					BusMuxInR8, BusMuxInR9, BusMuxInR10, BusMuxInR11, BusMuxInR12, BusMuxInR13, BusMuxInR14, BusMuxInR15,
 					BusMuxInHi, BusMuxInLo, BusMuxInZhi, BusMuxInZlo, BusMuxInPC, BusMuxInMDR, BusMuxInPort, BusMuxInCin,
-					BusMuxIn_In, BusMuxOutPort,
+					BusMuxIn_In, BusMuxOutPort, BusMuxInLO, BusMuxInHI,
 
 	//Enoder
 	input R0out, R1out, R2out, R3out, R4out, R5out, 
@@ -35,8 +35,8 @@ always @ (*) begin
 	else if(R13out) q = BusMuxInR13;
 	else if(R14out) q = BusMuxInR14;
 	else if(R15out) q = BusMuxInR15;
-	else if(HIout) q = BusMuxInHi;
-	else if(LOout) q = BusMuxInLo;
+	else if(HIout) q = BusMuxInHI;
+	else if(LOout) q = BusMuxInLO;
 	else if(Zhighout) q = BusMuxInZhi;
 	else if(Zlowout) q = BusMuxInZlo;
 	else if(PCout) q = BusMuxInPC;
