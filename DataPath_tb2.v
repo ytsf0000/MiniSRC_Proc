@@ -193,6 +193,7 @@ module DataPath_tb2();
 				R15in = 1'b0;
 				Clock = 1'b0;
 				Mdatain = 32'b0;
+				CONin = 1'b0;
 			end
 			Done:
 				$stop;

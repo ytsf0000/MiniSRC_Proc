@@ -223,6 +223,7 @@ module DataPath(
 	);
 	
 	ConFF ConFF_DUT(
+		.Clock(Clock),
 		.CONin(CONin),
 		.IR(BusMuxInIR[20:19]), // only bits 20 and 19 from the IR register should be input here.
 		.Bus(BusMuxOut),
