@@ -258,7 +258,7 @@ module DataPath_tb2();
 						Yin = 1;
 					end
 					Brzr,Brnz,Brpl,Brmi:begin
-						Gra=1;
+						Gra = 1;
 						Rout = 1;
 						CONin = 1;
 					end

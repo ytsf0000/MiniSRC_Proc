@@ -1,4 +1,5 @@
 module ConFF (
+	input Clock,
 	input CONin,
 	input [1:0] IR, // we only need two bits here
 	input [31:0] Bus,
@@ -32,8 +33,8 @@ module ConFF (
 	
 	assign dff_in = brzr | brnz | brpl | brmi;
 	
-	always @ (posedge CONin) begin
-		BranchOut <= dff_in;
+	always @ (posedge Clock) begin
+		BranchOut <= CONin ? dff_in : 0;
 	end
 	
 endmodule
