@@ -230,17 +230,16 @@ module DataPath_tb2();
 					5'b01100 : operation_state = Addi;
 					5'b01101 : operation_state = Andi;
 					5'b01110 : operation_state = Ori;
-					5 : operation_state = Brzr;
-					6 : operation_state = Brzr;
-					7 : operation_state = Brnz;
-					8 : operation_state = Brpl;
-					9 : operation_state = Brmi;
-					10 : operation_state = Jr;
-					11 : operation_state = Jal;
+					5'b10011 : operation_state = Brzr;
+					5'b10111 : operation_state = Brnz;
+					5'b11011 : operation_state = Brpl;
+					5'b11111 : operation_state = Brmi;
+					5'b10100 : operation_state = Jr;
+					5'b10101 : operation_state = Jal;
 					12 : operation_state = Mfhi;	
 					13 : operation_state = Mflo;
-					14 : operation_state = In;
-					15 : operation_state = Out;
+					5'b10110 : operation_state = In;
+					5'b10111 : operation_state = Out;
 				endcase
       end
       T3 : 
@@ -257,6 +256,16 @@ module DataPath_tb2();
 						Grb = 1;
 						Rout = 1;
 						Yin = 1;
+					end
+					Brzr,Brnz,Brpl,Brmi:begin
+						Gra=1;
+						Rout = 1;
+						CONin = 1;
+					end
+					Jr, Jal:begin
+						Gra = 1;
+						Rout = 1;
+						PCin = 1;
 					end
 					In:begin
 						Gra=1;
@@ -304,6 +313,18 @@ module DataPath_tb2();
 						Cout = 1;
 						OR = 1;
 						Zin = 1;
+					end
+					Brzr,Brnz,Brpl,Brmi:begin
+						Gra=0;
+						Rout=0;
+						CONin = 0;
+						PCout = 1;
+						Yin = 1;
+					end
+					Jr, Jal:begin
+						Gra = 0;
+						Rout = 0;
+						PCin = 0;
 					end
 					In:begin
 						Gra=0;
@@ -353,6 +374,13 @@ module DataPath_tb2();
 					Gra = 1;
 					Rin = 1;
 				end
+				Brzr,Brnz,Brpl,Brmi:begin
+					PCout = 0;
+					Yin = 0;
+					Cout = 1;
+					ADD = 1;
+					Zin = 1;
+				end
         endcase
       end
       T6 : 
@@ -375,6 +403,13 @@ module DataPath_tb2();
 						Gra=1;
 						Rout=1;
 						Write=1;
+					end
+					Brzr,Brnz,Brpl,Brmi:begin
+						Cout = 0;
+						ADD = 0;
+						Zin = 0;
+						Zlowout = 1;
+						PCin = 1;
 					end
         endcase
       end
