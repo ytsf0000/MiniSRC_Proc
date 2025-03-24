@@ -251,6 +251,11 @@ module DataPath_tb2();
             BAout=1;
             Yin=1;
           end
+			 Addi, Andi, Ori: begin
+				Grb = 1;
+				Rout = 1;
+				Yin = 1;
+			 end
         endcase
       end
       T4 : 
@@ -264,6 +269,14 @@ module DataPath_tb2();
             ADD=1;
             Zin=1;
           end
+			 Addi, Andi, Ori: begin
+				Grb = 0;
+				Rout = 0;
+				Yin = 0;
+				Cout = 1;
+				ADD = 1;
+				Zin = 1;
+			 end
         endcase
       end
       T5 : 
@@ -291,6 +304,7 @@ module DataPath_tb2();
 						Zlowout=1;
             MARin=1;
 					end
+				
         endcase
       end
       T6 : 
