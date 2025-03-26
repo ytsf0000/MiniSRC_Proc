@@ -50,8 +50,6 @@ module ControlUnit #(parameter InterruptsNum=1)(
 	output reg PCout
 );
 
-	wire BranchOut;
-
 	parameter 
 		Ld =		5'b00000,
 		Ldi =		5'b00001,
@@ -79,8 +77,6 @@ module ControlUnit #(parameter InterruptsNum=1)(
 		Out =		5'b10111,
 		Mflo =	5'b11000,
 		Mfhi =	5'b11001;
-
-
 
 	parameter T0=4'h0,T1=4'h1,T2=4'h2,T3=4'h3,T4=4'h4,T5=4'h5,T6=4'h6,T7=4'h7,Clear = 4'h8,Done=4'h9;
 	
@@ -221,7 +217,6 @@ module ControlUnit #(parameter InterruptsNum=1)(
 						Gra = 1;
 						Rout = 1;
 						CONin = 1;
-						BranchTaken = BranchOut;// TODO see significance of this
 					end
 					Jr:begin
 						Gra = 1;
@@ -471,8 +466,7 @@ module ControlUnit #(parameter InterruptsNum=1)(
 						Zin = 0;
 						ADD = 0;
 						Zlowout = 1;
-						if (BranchTaken)
-						PCin = 1;
+						PCin = CON_FF;
 						end
 				endcase
 			end
