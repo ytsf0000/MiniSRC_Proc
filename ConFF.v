@@ -3,9 +3,8 @@ module ConFF (
 	input CONin,
 	input [1:0] IR, // we only need two bits here
 	input [31:0] Bus,
-	output reg BranchOut
+	output BranchOut
 );
-
 	wire brzr; // branch if 0
 	wire brnz; // branch if not 0
 	wire brpl; // branch if pos
@@ -13,7 +12,8 @@ module ConFF (
 	wire dff_in;
 	
 	reg [3:0] decoder_out;
-
+	reg branch_result;
+	
 	// decoder
 	always @ (*) begin
 		case(IR)
@@ -32,7 +32,9 @@ module ConFF (
 	assign dff_in = brzr | brnz | brpl | brmi;
 	
 	always @ (posedge Clock) begin
-		BranchOut <= CONin ? dff_in : 0;
+		if (CONin) branch_result <= dff_in;
+		else branch_result <= 0;
 	end
 	
+	assign BranchOut = branch_result;
 endmodule

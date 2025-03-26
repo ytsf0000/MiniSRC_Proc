@@ -2,23 +2,23 @@
 module DataPath_tb2();
 
 	reg PCout, Zlowout, Zhighout, MDRout, HIout, LOout, R0out, R1out, R2out, R3out, R4out, R5out, R6out, R7out, R8out, R9out, R10out, R11out, R12out, R13out, R14out, R15out; // add any other signals to see in your simulation
-	reg MARin, Zin, PCin, MDRin, IRin, Yin, LOin, HIin, INPort_In, CONin;
+	reg MARin, Zin, PCin, MDRin, IRin, Yin, LOin, HIin, CONin;
 	reg IncPC, Read, R0in, R1in, R2in, R3in, R4in, R5in, R6in, R7in, R8in, R9in, R10in, R11in, R12in, R13in, R14in, R15in, RAin;
 	reg AND, OR, ADD, SUB, MUL, DIV, SHR, SHRA, SHL, ROR, ROL, NEG, NOT;
-	reg Write, Rin, Rout, Gra, Grb, Grc, BAout, Cout, OutPortIn, OutPortOut;
+	reg Write, Rin, Rout, Gra, Grb, Grc, BAout, Cout, OutPortIn, OutPortOut, RINout;
 	reg BranchTaken;
 	reg Clock;
 	wire Clear;
 	wire BranchOut;
 	wire [31:0] OutPort_Out;
-	reg [31:0] Mdatain;
+	reg [31:0] Mdatain, INPort_In;
 	reg Strobe;
 
-	parameter Ld=4'h0,Ldi=4'h1,St=4'h2,Addi=4'h3,Andi=4'h4,Ori=4'h5,Brzr=4'h6,Brnz=4'h7,Brpl=4'h8,Brmi=4'h9,Jr=4'hA,Jal=4'hB,Mfhi=4'hC,Mflo=4'hD,In=4'hE,Out=4'hF;
+	parameter Ld=5'h0,Ldi=5'h1,St=5'h2,Addi=5'h3,Andi=5'h4,Ori=5'h5,Brzr=5'h6,Brnz=5'h7,Brpl=5'h8,Brmi=5'h9,Jr=5'hA,Jal=5'hB,Mfhi=5'hC,Mflo=5'hD,In=5'hE,Out=5'hF, Mul = 5'h10, Div = 5'h11;
 
 	parameter T0=4'h0,T1=4'h1,T2=4'h2,T3=4'h3,T4=4'h4,T5=4'h5,T6=4'h6,T7=4'h7,Done=4'h8,Default = 4'h9;
   
-	reg [3:0] operation_state;
+	reg [4:0] operation_state;
 	
 	reg [3:0] next_state;
 	reg [3:0] present_state;
@@ -71,6 +71,7 @@ module DataPath_tb2();
 		.OutPortIn(OutPortIn), // this is the control signal for the output port
 		.OutPortOut(OutPortOut), // output outport to busmux out
 		.OutPort_Out(OutPort_Out), // this is also an output
+		.RINout(RINout),
 		.BranchOut(BranchOut), // use this signal to see if the branch occurs or not: 1 = branch, 0 = no branch
 		.RAin(RAin)
 	);
@@ -192,11 +193,15 @@ module DataPath_tb2();
 				R13in = 1'b0;
 				R14in = 1'b0;
 				R15in = 1'b0;
+				RAin = 1'b0;
 				Clock = 1'b0;
 				Mdatain = 32'b0;
 				CONin = 1'b0;
 				BranchTaken = 1'b0;
 				OutPortIn = 1'b0;
+				Strobe = 1'b0;
+				INPort_In=32'hABCDEF00;
+				OutPortOut = 1'b0;
 			end
 			Done:
 				$stop;
@@ -206,6 +211,7 @@ module DataPath_tb2();
         MARin=1;
         IncPC=1;
         Zin=1;
+		  Strobe=1; 
       end
       T1 : 
       begin
@@ -228,9 +234,9 @@ module DataPath_tb2();
         IRin=1;
 
 				case (DataPath_DUT.BusMuxInIR[31:27])
-					0 : operation_state = Ld;
-					1 : operation_state = Ldi;
-					2 : operation_state = St;
+					5'b00000 : operation_state = Ld;
+					5'b00001 : operation_state = Ldi;
+					5'b00010 : operation_state = St;
 					5'b01100 : operation_state = Addi;
 					5'b01101 : operation_state = Andi;
 					5'b01110 : operation_state = Ori;
@@ -240,12 +246,14 @@ module DataPath_tb2();
 						2'b10: operation_state = Brpl;
 						2'b11: operation_state = Brmi;
 					endcase
-					5'b10100 : operation_state = Jr;
-					5'b10101 : operation_state = Jal;
+					5'b10101 : operation_state = Jr;
+					5'b10100 : operation_state = Jal;
 					5'b11001 : operation_state = Mfhi;	
 					5'b11000 : operation_state = Mflo;
 					5'b10110 : operation_state = In;
 					5'b10111 : operation_state = Out;
+					5'b10000 : operation_state = Mul;
+					5'b01111 : operation_state = Div;
 				endcase
       end
       T3 : 
@@ -292,13 +300,18 @@ module DataPath_tb2();
 					In:begin
 						Gra=1;
 						Rin=1;
-						OutPortOut=1;
+						RINout=1;
 					end
 					Out:begin
 						Gra=1;
 						Rout=1;
 						OutPortIn=1;
-          end
+					end
+					Mul, Div:begin
+						Gra=1;
+						Rout=1;
+						Yin=1;
+					end
         endcase
       end
       T4 : 
@@ -370,12 +383,28 @@ module DataPath_tb2();
 					In:begin
 						Gra=0;
 						Rin=0;
-						OutPortOut=0;
+						RINout=0;
 					end
 					Out:begin
 						Gra=0;
 						Rout=0;
 						OutPortIn=0;
+					end
+					Mul:begin
+						Gra=0;
+						Yin=0;
+						Rout=1;
+						Grb=1;
+						MUL=1;
+						Zin=1;
+					end
+					Div:begin
+						Gra=0;
+						Yin=0;
+						Rout=1;
+						Grb=1;
+						DIV=1;
+						Zin=1;
 					end
         endcase
       end
@@ -427,6 +456,15 @@ module DataPath_tb2();
 					Rout = 0;
 					PCin = 0;
 				end
+				Mul, Div:begin
+					Rout=0;
+					Grb=0;
+					DIV=0;
+					MUL=0;
+					Zin=0;
+					Zlowout = 1;
+					LOin = 1;
+				end
         endcase
       end
       T6 : 
@@ -458,6 +496,12 @@ module DataPath_tb2();
 						if (BranchTaken)
 							PCin = 1;
 					end
+					Mul, Div:begin
+						Zlowout = 0;
+						LOin = 0;
+						Zhighout = 1;
+						HIin = 1;
+					end
         endcase
       end
       T7 : 
@@ -479,6 +523,11 @@ module DataPath_tb2();
 						Rout=0;
 						Write=0;
 					end
+					Mul, Div:begin
+						Zhighout = 0;
+						HIin = 0;
+					end
+					
         endcase
 
       end

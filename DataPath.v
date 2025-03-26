@@ -43,6 +43,7 @@ module DataPath(
 	input Strobe, // This is the ready signal for the output port, asserted by testbench
 	input OutPortIn,
 	input OutPortOut,
+	input RINout,
 	input RAin,
 	output [31:0] OutPort_Out,
 	output BranchOut
@@ -64,7 +65,6 @@ module DataPath(
 	wire R13in;
 	wire R14in;
 	wire R15in;
-	wire RINout;
 
 	//Output Reg.
 	wire R0out;
