@@ -1,9 +1,9 @@
 module ControlUnit #(parameter InterruptsNum=1)(
-  input Clock, Clear, Stop, CON_FF,
+	input Clock, Reset, Stop, CON_FF,
 	input [31:0]IR,
 	input interrupt[InterruptsNum-1:0],
 	output reg Run,
-	output reg Clear,
+	output reg ClearSig,
 
 	output reg OutPortIn,
 	output reg Read,
@@ -53,9 +53,9 @@ module ControlUnit #(parameter InterruptsNum=1)(
 	wire BranchOut;
 
 	parameter 
-		Ld =		5'b00000,// done
-		Ldi =		5'b00001,// done
-		St =		5'b00010,// done
+		Ld =		5'b00000,
+		Ldi =		5'b00001,
+		St =		5'b00010,
 		Add =		5'b00011,
 		Sub =		5'b00100,
 		And =		5'b00101,
@@ -65,25 +65,25 @@ module ControlUnit #(parameter InterruptsNum=1)(
 		Shr =		5'b01001,
 		Shra =	5'b01010,
 		Shl =		5'b01011,
-		Addi =	5'b01100,// done
-		Andi =	5'b01101,// done
-		Ori =		5'b01110,// done
+		Addi =	5'b01100,
+		Andi =	5'b01101,
+		Ori =		5'b01110,
 		Div =		5'b01111,
 		Mul =		5'b10000,
 		Neg =		5'b10001,
 		Not =		5'b10010,
-		Br =		5'b10011,// done
-		Jal =		5'b10100,// done
-		Jr =		5'b10101,// done
-		In =		5'b10110,// done
-		Out =		5'b10111,// done
-		Mflo =	5'b11000,// done
-		Mfhi =	5'b11001;// done
+		Br =		5'b10011,
+		Jal =		5'b10100,
+		Jr =		5'b10101,
+		In =		5'b10110,
+		Out =		5'b10111,
+		Mflo =	5'b11000,
+		Mfhi =	5'b11001;
 
 
 
-	parameter T0=4'h0,T1=4'h1,T2=4'h2,T3=4'h3,T4=4'h4,T5=4'h5,T6=4'h6,T7=4'h7,ClearState = 4'h8,Done=4'h9;
-  
+	parameter T0=4'h0,T1=4'h1,T2=4'h2,T3=4'h3,T4=4'h4,T5=4'h5,T6=4'h6,T7=4'h7,Clear = 4'h8,Done=4'h9;
+	
 	wire [5:0] operation_state;
 	assign operation_state=IR[31:27];
 	
@@ -92,7 +92,7 @@ module ControlUnit #(parameter InterruptsNum=1)(
 	
 	// initial state
 	initial begin
-		present_state <= ClearState;
+		present_state <= Clear;
 		operation_state <= Ld;
 	end
 	
@@ -105,19 +105,19 @@ module ControlUnit #(parameter InterruptsNum=1)(
 	// prepare next state
 	always @(*) begin
 		case (present_state)
-			ClearState : next_state = T0;
+			Clear : next_state = T0;
 			T0 : next_state = T1;
 			T1 : next_state = T2;
 			T2 : next_state = T3;
 			T3 : next_state = T4;
 			T4 : next_state = T5;
 			T5 : next_state = T6;
-			T6 : next_state = ClearState;
-      T7 : next_state = T0;
+			T6 : next_state = Clear;
+			T7 : next_state = T0;
 			Done: next_state=Done;
 		endcase
-		if(Clear)
-			next_state = ClearState;
+		if(Reset)
+			next_state = Clear;
 	end
 	
 	// logic
@@ -125,7 +125,7 @@ module ControlUnit #(parameter InterruptsNum=1)(
 		case (present_state)
 			Clear : begin
 				Run = 1'b0;
-				Clear = 1'b0;
+				ClearSig = 1'b0;
 				OutPortIn = 1'b0;
 				Read = 1'b0;
 				Write = 1'b0;
@@ -171,44 +171,49 @@ module ControlUnit #(parameter InterruptsNum=1)(
 				$stop;
 			end
 			T0 : 
-      begin
-        PCout=1;
-        MARin=1;
-        IncPC=1;
-        Zin=1;
-      end
-      T1 : 
-      begin
-        PCout=0;
-        MARin=0;
-        IncPC=0;
-        Zin=0;
-        Zlowout=1;
-        PCin=1;
-        Read=1;
-        MDRin=1;
-      end
-      T2 : 
-      begin
-        Zlowout=0;
-        PCin=0;
-        Read=0;
-        MDRin=0;
-        MDRout=1;
-        IRin=1;
-      end
-      T3 : 
-      begin
-        MDRout=0;
-        IRin=0;
-        case (operation_state)
-          Ld,Ldi,St:begin
-            Grb=1;
-            BAout=1;
-            Yin=1;
+			begin
+				PCout=1;
+				MARin=1;
+				IncPC=1;
+				Zin=1;
+			end
+			T1 : 
+			begin
+				PCout=0;
+				MARin=0;
+				IncPC=0;
+				Zin=0;
+				Zlowout=1;
+				PCin=1;
+				Read=1;
+				MDRin=1;
+			end
+			T2 : 
+			begin
+				Zlowout=0;
+				PCin=0;
+				Read=0;
+				MDRin=0;
+				MDRout=1;
+				IRin=1;
+			end
+			T3 : 
+			begin
+				MDRout=0;
+				IRin=0;
+				case (operation_state)
+					Ld,Ldi,St:begin
+						Grb=1;
+						BAout=1;
+						Yin=1;
 					end
-					Addi, Andi, Ori: begin
+					Add,Sub,And,Or,Addi, Andi, Ori, Ror, Rol, Shr, Shra, Shl, Neg, Not: begin
 						Grb = 1;
+						Rout = 1;
+						Yin = 1;
+					end
+					Div,Mul: begin
+						Gra = 1;
 						Rout = 1;
 						Yin = 1;
 					end
@@ -247,20 +252,37 @@ module ControlUnit #(parameter InterruptsNum=1)(
 						Gra=1;
 						Rout=1;
 						OutPortIn=1;
-          end
-        endcase
-      end
-      T4 : 
-      begin
-        case(operation_state)
-          Ld,Ldi,St:begin
-            Grb=0;
-            BAout=0;
-            Yin=0;
-            Cout=1;
-            ADD=1;
-            Zin=1;
-          end
+					end
+				endcase
+			end
+			T4 : 
+			begin
+				case(operation_state)
+					Ld,Ldi,St:begin
+						Grb=0;
+						BAout=0;
+						Yin=0;
+						Cout=1;
+						ADD=1;
+						Zin=1;
+					end
+					Add,Sub,And,Or,Ror, Rol, Shr, Shra, Shl: begin
+						Grb = 0;
+						Yin = 0;
+
+						Rout = 1;
+						Grc = 1;
+						ADD	= operation_state == Add;
+						SUB	= operation_state == Sub;
+						AND	= operation_state == And;
+						OR	= operation_state == Or;
+						ROR	= operation_state == Ror;
+						ROL	= operation_state == Rol;
+						SHR	= operation_state == Shr;
+						SHRA= operation_state == Shra;
+						SHL	= operation_state == Shl;
+						Zin = 1;
+					end
 					Addi: begin
 						Grb = 0;
 						Rout = 0;
@@ -285,6 +307,21 @@ module ControlUnit #(parameter InterruptsNum=1)(
 						OR = 1;
 						Zin = 1;
 					end
+					Div,Mul: begin
+						Gra = 0;
+						Yin = 0;
+
+						Rout = 1;
+						Grb = 1;
+						MUL = operation_state == Mul;
+						DIV = operation_state == Div;
+						Zin = 1;
+					end
+					Neg,Not: begin
+						NEG = operation_state == Neg;
+						NOT = operation_state == Not;
+						Zin = 1;
+					end
 					Br: begin
 						Gra=0;
 						Rout=0;
@@ -301,7 +338,6 @@ module ControlUnit #(parameter InterruptsNum=1)(
 						RAin = 0;
 						Rin = 0;
 						PCout = 0;
-						
 						Gra = 1;
 						Rout = 1;
 						PCin = 1;
@@ -326,112 +362,146 @@ module ControlUnit #(parameter InterruptsNum=1)(
 						Rout=0;
 						OutPortIn=0;
 					end
-        endcase
-      end
-      T5 : 
-      begin
-        case(operation_state)
-          Ld:begin
-            Cout=0;
-            ADD=0;
-            Zin=0;
-            Zlowout=1;
-            MARin=1;
-          end
+				endcase
+			end
+			T5 : 
+			begin
+				case(operation_state)
+					Ld:begin
+						Cout=0;
+						ADD=0;
+						Zin=0;
+						Zlowout=1;
+						MARin=1;
+					end
 					Ldi:begin
-            Cout=0;
-            ADD=0;
-            Zin=0;
-            Zlowout=1;
+						Cout=0;
+						ADD=0;
+						Zin=0;
+						Zlowout=1;
 						Gra=1;
 						Rin=1;
 					end
 					St:begin
 						Cout=0;
-            ADD=0;
-            Zin=0;
+						ADD=0;
+						Zin=0;
 						Zlowout=1;
-            MARin=1;
+						MARin=1;
 					end
-				
-				Addi, Andi, Ori: begin
-					Cout = 0;
-					AND = 0;
-					ADD = 0;
-					OR = 0;
-					Zin = 0;
-					Zlowout = 1;
-					Gra = 1;
-					Rin = 1;
-				end
-				Br:begin
-					PCout = 0;
-					Yin = 0;
-					ADD = 1;
-					Cout = 1;
-					Zin = 1;
-				end
-				Jal: begin
-					Gra = 0;
-					Rout = 0;
-					PCin = 0;
-				end
-        endcase
-      end
-      T6 : 
-      begin
-        case(operation_state)
-          Ld:begin
-            Zlowout=0;
-            MARin=0;
-            Read=1;
-            MDRin=1;
-          end
+					Add,Sub,And,Or,Addi, Andi, Ori,Ror, Rol, Shr, Shra, Shl, Neg, Not: begin
+						Rout = 0;
+						Grc = 0;
+						ADD = 0;
+						SUB = 0;
+						AND = 0;
+						OR = 0;
+						ROR = 0;
+						ROL = 0;
+						SHR = 0;
+						SHRA = 0;
+						SHL = 0;
+						NEG = 0;
+						NOT = 0;
+						Zin = 0;
+
+						Zlowout = 1;
+						Gra = 1;
+						Rin = 1;
+					end
+					Div,Mul: begin
+						Rout = 0;
+						Grb = 0;
+						MUL = 0;
+						DIV = 0;
+						Zin = 0;
+
+						Zlowout = 1;
+						LOin = 1;
+					end
+					Br:begin
+						PCout = 0;
+						Yin = 0;
+						ADD = 1;
+						Cout = 1;
+						Zin = 1;
+					end
+					Jal: begin
+						Gra = 0;
+						Rout = 0;
+						PCin = 0;
+					end
+				endcase
+			end
+			T6 : 
+			begin
+				case(operation_state)
+					Ld:begin
+						Zlowout=0;
+						MARin=0;
+						Read=1;
+						MDRin=1;
+					end
 					Ldi:begin
 						Zlowout=0;
 						Gra=0;
 						Rin=0;
 					end
 					St:begin
-            Zlowout=0;
-            MARin=0;
+						Zlowout=0;
+						MARin=0;
 						Gra=1;
 						Rout=1;
 						Write=1;
 					end
+					Add,Sub,And,Or,Addi, Andi, Ori,Ror, Rol, Shr, Shra, Shl, Neg, Not: begin
+						Zlowout = 0;
+						Gra = 0;
+						Rin = 0;
+					end
+					Div,Mul: begin
+						Zlowout = 0;
+						LOin = 0;
+						Zhighout = 1;
+						HIin = 1;
+					end
+
 					Br:begin
 						Cout = 0;
 						Zin = 0;
 						ADD = 0;
 						Zlowout = 1;
 						if (BranchTaken)
-							PCin = 1;
+						PCin = 1;
+						end
+				endcase
+			end
+			T7 : 
+			begin
+				case(operation_state)
+					Div,Mul: begin
+						Zhighout = 0;
+						HIin = 0;
 					end
-        endcase
-      end
-      T7 : 
-      begin
-        case(operation_state)
 					Br:begin
 						Zlowout = 0;
 						PCin = 0;
 					end
-          Ld:begin
-            Read=0;
-            MDRin=0;
-            MDRout=1;
-            Gra=1;
-            Rin=1;
-          end
+					Ld:begin
+						Read=0;
+						MDRin=0;
+						MDRout=1;
+						Gra=1;
+						Rin=1;
+					end
 					St:begin
 						Gra=0;
 						Rout=0;
 						Write=0;
 					end
-        endcase
+				endcase
+			end
 
-      end
-      
-      endcase
+		endcase
 	end	
 endmodule
