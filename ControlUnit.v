@@ -1,7 +1,7 @@
-module ControlUnit #(parameter InterruptsNum=1)(
+module ControlUnit #(parameter InterruptsNum=2)(
 	input Clock, Reset, Stop, CON_FF,
 	input [31:0]IR,
-	input interrupt[InterruptsNum-1:0],
+	input [InterruptsNum-1:0]interrupt,
 	output reg Run,
 	output reg ClearSig,
 
@@ -47,7 +47,8 @@ module ControlUnit #(parameter InterruptsNum=1)(
 	output reg Zhighout,
 	output reg Zlowout,
 	output reg MDRout,
-	output reg PCout
+	output reg PCout,
+	output reg RAin
 );
 
 	parameter 
@@ -89,7 +90,6 @@ module ControlUnit #(parameter InterruptsNum=1)(
 	// initial state
 	initial begin
 		present_state <= Clear;
-		operation_state <= Ld;
 	end
 	
 	// state transition

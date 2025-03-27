@@ -1,8 +1,7 @@
-`timescale 1ns/10ps
 module DataPath_tb3();
 
   reg Clock; 
-  reg interrupt[0:0];
+  reg [1:0]interrupt;
   
 
   reg Reset,Stop; // idk what to do with those
@@ -53,9 +52,9 @@ module DataPath_tb3();
   wire Zlowout;
   wire MDRout;
   wire PCout;
-
-  reg [31:0]OutPortData;
-  wire [31:0] IR;
+  wire RAin;
+  
+  wire [31:0]OutPortData;
 
 
   DataPath datapath(
@@ -103,19 +102,20 @@ module DataPath_tb3();
     .Zlowout(Zlowout),
     .MDRout(MDRout),
     .PCout(PCout),
+    .RAin(RAin),
     .Clear(Clear)
   );
-  assign IR=DataPath.BusMuxInIR;
+  assign IR=datapath.BusMuxInIR;
 
   ControlUnit ControlUnit_DUT(
     .Clock(Clock),
     .Reset(Reset),
+	 .ClearSig(Clear),
     .Stop(Stop),
     .CON_FF(CON_FF),
     .IR(IR),
     .interrupt(interrupt),
     .Run(Run),
-    .Clear(Clear),
     .OutPortIn(OutPortIn),
     .Read(Read),
     .Write(Write),
@@ -155,10 +155,10 @@ module DataPath_tb3();
     .Zhighout(Zhighout),
     .Zlowout(Zlowout),
     .MDRout(MDRout),
-    .PCout(PCout)
+    .PCout(PCout),
+    .RAin(RAin)
   );
 
-  reg Clock;
   initial begin
 		Clock <= 1'b1;
 		forever #10 Clock <= ~ Clock;
