@@ -4,7 +4,7 @@ module DataPath_tb3();
   reg [1:0]interrupt;
   
 
-  reg Reset,Stop; // idk what to do with those
+  reg Reset,Stop;
   
   wire CON_FF;
   reg BranchOut;
@@ -53,7 +53,7 @@ module DataPath_tb3();
   wire MDRout;
   wire PCout;
   wire RAin;
-  
+
   wire [31:0]OutPortData;
 
 
@@ -110,7 +110,7 @@ module DataPath_tb3();
   ControlUnit ControlUnit_DUT(
     .Clock(Clock),
     .Reset(Reset),
-	 .ClearSig(Clear),
+    .ClearSig(Clear),
     .Stop(Stop),
     .CON_FF(CON_FF),
     .IR(IR),
@@ -160,10 +160,19 @@ module DataPath_tb3();
   );
 
   initial begin
+    Reset<=1;
+    Stop<=0;
 		Clock <= 1'b1;
 		forever #10 Clock <= ~ Clock;
 	end
 
+  always @ (negedge Clock)
+  begin
+    Reset<=0;
+    if(!Run)begin
+      $stop;
+    end
+  end
 
 
 

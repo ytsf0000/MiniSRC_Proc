@@ -1,46 +1,47 @@
 // Created with SRC-ASM (https://github.com/davlaf/elec374-assembler)
-  @0 0980BEEF // ldi R3, 0xBEEF    
-  @1 0B00DEAD // ldi R6, 0xDEAD    
-  @2 B1800000 // in R3             
-  @3 BB000000 // out R6            
-  @4 00000000
-  @5 00000000
-  @6 00000000
-  @7 00000000
-  @8 00000000
-  @9 00000000
-  @A 00000000
-  @B 00000000
-  @C 00000000
-  @D 00000000
-  @E 00000000
-  @F 00000000
- @10 00000000
- @11 00000000
- @12 00000000
- @13 00000000
- @14 00000000
- @15 00000000
- @16 00000000
- @17 00000000
- @18 00000000
- @19 00000000
- @1A 00000000
- @1B 00000000
- @1C 00000000
- @1D 00000000
- @1E 00000000
- @1F 00000000
- @20 00000000
- @21 00000000
- @22 00000000
- @23 00000000
- @24 00000000
- @25 00000000
- @26 00000000
- @27 00000000
- @28 00000000
- @29 00000000
+  @0 09800065 // ldi   R3, 0x65    ; R3 = 0x65
+  @1 09980003 // ldi   R3, 3(R3)   ; R3 = 0x68
+  @2 01000054 // ld    R2, 0x54    ; R2 = (0x54) = 0x97
+  @3 09100001 // ldi   R2, 1(R2)   ; R2 = 0x98
+  @4 0017FFFA // ld    R0, -6(R2)  ; R0 = (0x92) = 0x46
+  @5 08800003 // ldi   R1, 3       ; R1 = 3
+  @6 09800057 // ldi   R3, 0x57    ; R3 = 0x57
+  @7 99980003 // brmi  R3, 3       ; continue with the next instruction (will not branch)
+  @8 09980003 // ldi   R3, 3(R3)   ; R3 = 0x5A
+  @9 021FFFFA // ld    R4, -6(R3)  ; R4 = (0x5A - 6) = 0x97
+  @A D0000000 // nop               
+  @B 9A100002 // brpl  R4, 2       ; continue with the instruction at target (will branch)
+  @C 0B180007 // ldi   R6, 7(R3)   ; this instruction will not execute
+  @D 0AB7FFFC // ldi   R5, -4(R6)  ; this instruction will not execute
+//   target:
+  @E 19988000 // add   R3, R3, R1  ; R3 = 0x5D
+  @F 62200002 // addi  R4, R4, 2   ; R4 = 0x99
+ @10 8A200000 // neg   R4, R4      ; R4 = 0xFFFFFF67
+ @11 92200000 // not   R4, R4      ; R4 = 0x98
+ @12 6A20000F // andi  R4, R4, 0xF ; R4 = 8
+ @13 39008000 // ror   R2, R0, R1  ; R2 = 0xC0000008
+ @14 72100007 // ori   R4, R2, 7   ; R4 = 0xC000000F
+ @15 51208000 // shra  R2, R4, R1  ; R2 = 0xF8000001
+ @16 49988000 // shr   R3, R3, R1  ; R3 = 0xB
+ @17 11800092 // st    0x92, R3    ; (0x92) = 0xB new value in memory with address 0x92
+ @18 41808000 // rol   R3, R0, R1  ; R3 = 0x230
+ @19 32880000 // or    R5, R1, R0  ; R5 = 0x47
+ @1A 29180000 // and   R2, R3, R0  ; R2 = 0
+ @1B 12900054 // st    0x54(R2), R5; (0x54) = 0x47 new value in memory with address 0x54
+ @1C 201A8000 // sub   R0, R3, R5  ; R0 = 0x1E9
+ @1D 59188000 // shl   R2, R3, R1  ; R2 = 0x1180
+ @1E 0A800008 // ldi   R5, 8       ; R5 = 8
+ @1F 0B000017 // ldi   R6, 0x17    ; R6 = 0x17
+ @20 83280000 // mul   R6, R5      ; HI = 0; LO = 0xB8
+ @21 CA000000 // mfhi  R4          ; R4 = 0
+ @22 C3800000 // mflo  R7          ; R7 = 0xB8
+ @23 7B280000 // div   R6, R5      ; HI = 7, LO = 2
+ @24 0D280001 // ldi   R10, 1(R5)  ; R10 = 9 setting up argument registers
+ @25 0DB7FFFD // ldi   R11, -3(R6) ; R11 = 0x14 R10, R11, R12, and R13
+ @26 0E380001 // ldi   R12, 1(R7)  ; R12 = 0xB9
+ @27 0EA00004 // ldi   R13, 4(R4)  ; R13 = 4
+ @28 A6000000 // jal   R12         ; address of subroutine subA in R12 - return address in R8
+ @29 D8000000 // halt              ; upon return, the program halts
  @2A 00000000
  @2B 00000000
  @2C 00000000
@@ -83,7 +84,7 @@
  @51 00000000
  @52 00000000
  @53 00000000
- @54 00000000
+ @54 00000097 // WORD  0x97        ; initialize memory as asked
  @55 00000000
  @56 00000000
  @57 00000000
@@ -145,7 +146,7 @@
  @8F 00000000
  @90 00000000
  @91 00000000
- @92 00000000
+ @92 00000046 // WORD  0x46        
  @93 00000000
  @94 00000000
  @95 00000000
@@ -184,10 +185,11 @@
  @B6 00000000
  @B7 00000000
  @B8 00000000
- @B9 00000000
- @BA 00000000
- @BB 00000000
- @BC 00000000
+//   subA:
+ @B9 1FD60000 // add   R15, R10, R12; procedure subA ; R14 and R15 are return value registers
+ @BA 275E8000 // sub   R14, R11, R13; R15 = 0xC2, R14 = 0x10
+ @BB 27FF0000 // sub   R15, R15, R14; R15 = 0xB2
+ @BC AC000000 // jr    R8          ; return from procedure
  @BD 00000000
  @BE 00000000
  @BF 00000000
