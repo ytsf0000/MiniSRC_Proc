@@ -7,7 +7,6 @@ module DataPath_tb3();
   reg Reset,Stop;
   
   wire CON_FF;
-  reg BranchOut;
   wire [31:0]IR;
   wire Clear;
   wire Run;
@@ -160,6 +159,7 @@ module DataPath_tb3();
   );
 
   initial begin
+	 interrupt <= 0;
     Reset<=1;
     Stop<=0;
 		Clock <= 1'b1;

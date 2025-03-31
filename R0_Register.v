@@ -6,6 +6,8 @@ module Register_r0(
 
 reg [31:0] q;
 
+initial begin q <= 32'b0; end
+
 always @ (posedge Clock)
     begin
         if (Clear) begin

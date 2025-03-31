@@ -106,11 +106,15 @@ module ControlUnit #(parameter InterruptsNum=2)(
 			present_state <= T0;
 			Run<=1;
 		end
-		if (Stop)begin
+		else if (Stop)begin
+			ClearSig <= 1'b0;
 			Run <= 0;
 		end
+		else begin
+			ClearSig <= 1'b0;
+			Run <= !(operation_state == Halt);
+		end
 	end
-	
 	// prepare next state
 	always @(*) begin
 		case (present_state)
@@ -135,7 +139,6 @@ module ControlUnit #(parameter InterruptsNum=2)(
 		begin
 			case (present_state)
 				Clear : begin
-					ClearSig = 1'b0;
 					OutPortIn = 1'b0;
 					Read = 1'b0;
 					Write = 1'b0;
@@ -177,6 +180,7 @@ module ControlUnit #(parameter InterruptsNum=2)(
 					MDRout = 1'b0;
 					PCout = 1'b0;
 					branchOut = 1'b0;
+					RAin = 1'b0;
 				end
 				Done:begin
 					$stop;
@@ -265,7 +269,7 @@ module ControlUnit #(parameter InterruptsNum=2)(
 							OutPortIn=1;
 						end
 						Halt:begin
-							Run = 0;
+
 						end
 					endcase
 				end
