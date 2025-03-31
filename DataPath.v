@@ -255,5 +255,6 @@ module DataPath(
 		.clk(Clock),
 		.data(sevenSegConnection[7:4])
   );
+	assign OutPort_Out[31:16]=0;
 
 endmodule 
