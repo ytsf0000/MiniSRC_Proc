@@ -241,19 +241,6 @@ module DataPath(
 		.BusMuxIn(BusMuxIn_In)
 	);
 	
-	wire [31:0]sevenSegConnection;
-	Register OutPort_DUT(.Clear(Clear), .Clock(Clock), .Enable(OutPortIn), .BusMuxOut(BusMuxOut), .BusMuxIn(sevenSegConnection));
-
-	Seven_Seg_Display_Out Seven_Seg_Display_Out_1_DUT(
-		.outputt(OutPort_Out[7:0]),
-		.clk(Clock),
-		.data(sevenSegConnection[3:0])
-  );
-  
-  Seven_Seg_Display_Out Seven_Seg_Display_Out_2_DUT(
-		.outputt(OutPort_Out[15:8]),
-		.clk(Clock),
-		.data(sevenSegConnection[7:4])
-  );
-
+	Register OutPort_DUT(.Clear(Clear), .Clock(Clock), .Enable(OutPortIn), .BusMuxOut(BusMuxOut), .BusMuxIn(OutPort_Out));
+	
 endmodule 
