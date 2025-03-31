@@ -261,7 +261,8 @@ module ControlUnit #(parameter InterruptsNum=2)(
 						In:begin
 							Gra=1;
 							Rin=1;
-							OutPortOut=1;
+              RINout=1;
+							Strobe=1;
 						end
 						Out:begin
 							Gra=1;
@@ -373,7 +374,8 @@ module ControlUnit #(parameter InterruptsNum=2)(
 						In:begin
 							Gra=0;
 							Rin=0;
-							OutPortOut=0;
+              RINout=0;
+							Strobe=0;
 						end
 						Out:begin
 							Gra=0;
