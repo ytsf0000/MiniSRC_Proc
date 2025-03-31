@@ -165,18 +165,6 @@ module DataPath_tb4();
 		.out_clock(Operating_CLK)
   );
   
-  Seven_Seg_Display_Out Seven_Seg_Display_Out_1_DUT(
-	.outputt(seven_seg_1),
-	.clk(Operating_CLK),
-	.data(OutPortData[3:0])
-  );
-  
-  Seven_Seg_Display_Out Seven_Seg_Display_Out_2_DUT(
-	.outputt(seven_seg_2),
-	.clk(Operating_CLK),
-	.data(OutPortData[7:4])
-  );
-  
   initial begin
 	 interrupt <= 0;
     Reset<=1;
