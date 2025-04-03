@@ -3,7 +3,7 @@ module DataPath_tb4();
   reg Clock; 
   wire Operating_CLK;
   reg [1:0]interrupt;
-  
+  reg [31:0] INPort_In;
 
   reg Reset,Stop;
   
@@ -11,7 +11,8 @@ module DataPath_tb4();
   wire [31:0]IR;
   wire Clear;
   wire Run;
-
+  wire RINout;
+  wire Strobe;
   wire OutPortIn;
   wire Read;
   wire Write;
@@ -62,7 +63,7 @@ module DataPath_tb4();
     .OutPort_Out(OutPortData),
     .BranchOut(CON_FF),
     .Clock(Operating_CLK),
-
+	 .INPort_In(INPort_In),
     .OutPortIn(OutPortIn),
     .Read(Read),
     .Write(Write),
@@ -104,7 +105,9 @@ module DataPath_tb4();
     .MDRout(MDRout),
     .PCout(PCout),
     .RAin(RAin),
-    .Clear(Clear)
+    .Clear(Clear),
+	 .Strobe(Strobe),
+	 .RINout(RINout)
   );
   assign IR=datapath.BusMuxInIR;
 
@@ -157,7 +160,9 @@ module DataPath_tb4();
     .Zlowout(Zlowout),
     .MDRout(MDRout),
     .PCout(PCout),
-    .RAin(RAin)
+    .RAin(RAin),
+	 .RINout(RINout),
+	 .Strobe(Strobe)
   );
   
   ClockDiv ClockDiv_DUT(
@@ -178,6 +183,7 @@ module DataPath_tb4();
   );
   
   initial begin
+	 INPort_In <= 32'hC0;
 	 interrupt <= 0;
     Reset<=1;
     Stop<=0;

@@ -4,7 +4,7 @@ module ControlUnit #(parameter InterruptsNum=2)(
 	input [InterruptsNum-1:0]interrupt,
 	output reg Run,
 	output reg ClearSig,
-
+	output reg RINout, Strobe,
 	output reg OutPortIn,
 	output reg Read,
 	output reg Write,
